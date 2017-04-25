@@ -1,0 +1,30 @@
+<!doctype html>
+
+<html>
+
+<head>
+  <title>Aria tooltip demo</title>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="aria-tooltip.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+  <script type="text/javascript" src="aria-tooltip.js"></script>
+</head>
+
+<body style="font-family: sans-serif; font-size: 0.9rem;">
+  <h1>ARIA TOOLTIP DEMO</h1>
+  <h2>Demo 1</h2>
+  <textarea name="example1" class="has-tooltip" aria-describedby="tt1"></textarea>
+  <span class="tooltip" id="tt1">You can type something inside this textarea, if you want.</span>
+
+
+  <h2>Demo 2</h2>
+  <input name="example2" type="button" class="has-tooltip" value="button with tooltip" aria-describedby="tt2">
+  <span class="tooltip" id="tt2">This button is really useful. You can click on it!</span>
+
+
+  <h2>Demo 3</h2>
+  <p><span class="has-tooltip" aria-describedby="tt3" id="demo3" style="color: #cb6129;">Lorem ipsum dolor sit amet</span> <span class="tooltip" id="tt3">This phrase is nonsense.</span>, consectetur adipiscing elit. Pellentesque vel urna vel urna sodales semper quis in nisi. Nam id metus nec tortor tempus cursus. Etiam eget tortor ac quam faucibus pretium. In rhoncus lobortis risus eget semper. Suspendisse et pulvinar diam. Aliquam dictum ex nulla, et aliquet ante gravida id. Praesent eu tincidunt nunc, ac egestas nibh. Vivamus porttitor, ante eu placerat mollis, lacus neque aliquam arcu, eget elementum metus ante sed odio. Etiam libero diam, interdum sed pharetra nec, maximus pellentesque turpis. Suspendisse ex velit, sagittis efficitur tristique non, porttitor non nibh. Fusce placerat orci in enim aliquam, ut vestibulum turpis interdum.
+  </p>
+</body>
+
+</html>

@@ -1,0 +1,105 @@
+.tooltip, .tooltip_bottom:after,
+.tooltip_left:after,
+.tooltip_top:after,
+.tooltip_right:after {
+  box-sizing: border-box; }
+
+.tooltip_bottom:after,
+.tooltip_left:after,
+.tooltip_top:after,
+.tooltip_right:after {
+  content: ""; }
+
+.tooltip_bottom:after,
+.tooltip_left:after,
+.tooltip_top:after,
+.tooltip_right:after {
+  display: block; }
+
+.tooltip {
+  display: none; }
+
+.tooltip {
+  margin: 0; }
+
+.tooltip_bottom:after,
+.tooltip_left:after,
+.tooltip_top:after,
+.tooltip_right:after {
+  position: absolute; }
+
+.tooltip {
+  position: fixed; }
+
+.tooltip {
+  background-color: #cb6129;
+  border: 0.1rem solid #ad5323;
+  border-radius: 0.25rem;
+  -webkit-box-shadow: 0.05rem 0.05rem 0.1rem 0.05rem rgba(127, 127, 127, 0.5);
+  -moz-box-shadow: 0.05rem 0.05rem 0.1rem 0.05rem rgba(127, 127, 127, 0.5);
+  box-shadow: 0.05rem 0.05rem 0.1rem 0.05rem rgba(127, 127, 127, 0.5);
+  color: #fff;
+  max-width: 10rem;
+  padding: 0.5rem; }
+
+.tooltip_bottom:after,
+.tooltip_left:after,
+.tooltip_top:after,
+.tooltip_right:after {
+  background-color: #cb6129;
+  border-left: 0.1rem solid #ad5323;
+  border-top: 0.1rem solid #ad5323;
+  border-bottom-right-radius: 0.8rem;
+  height: 0.8rem;
+  width: 0.8rem; }
+
+.tooltip_bottom:after {
+  left: 50%;
+  top: -0.45714rem;
+  -webkit-transform: translateX(-50%) rotate(45deg);
+  -moz-transform: translateX(-50%) rotate(45deg);
+  -ms-transform: translateX(-50%) rotate(45deg);
+  -o-transform: translateX(-50%) rotate(45deg);
+  transform: translateX(-50%) rotate(45deg); }
+
+.tooltip_left:after {
+  right: -0.45714rem;
+  top: 50%;
+  -webkit-transform: translateY(-50%) rotate(135deg);
+  -moz-transform: translateY(-50%) rotate(135deg);
+  -ms-transform: translateY(-50%) rotate(135deg);
+  -o-transform: translateY(-50%) rotate(135deg);
+  transform: translateY(-50%) rotate(135deg); }
+
+.tooltip_right:after {
+  left: -0.45714rem;
+  top: 50%;
+  -webkit-transform: translateY(-50%) rotate(-45deg);
+  -moz-transform: translateY(-50%) rotate(-45deg);
+  -ms-transform: translateY(-50%) rotate(-45deg);
+  -o-transform: translateY(-50%) rotate(-45deg);
+  transform: translateY(-50%) rotate(-45deg); }
+
+.tooltip_top:after {
+  bottom: -0.45714rem;
+  left: 50%;
+  -webkit-transform: translateX(-50%) rotate(225deg);
+  -moz-transform: translateX(-50%) rotate(225deg);
+  -ms-transform: translateX(-50%) rotate(225deg);
+  -o-transform: translateX(-50%) rotate(225deg);
+  transform: translateX(-50%) rotate(225deg); }
+
+.tooltip_screen-top,
+.tooltip_screen-bottom {
+  max-width: 100%;
+  width: 100%; }
+
+.tooltip_screen-top {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0; }
+
+.tooltip_screen-bottom {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0; }
+
+/*# sourceMappingURL=aria-tooltip.css.map */
