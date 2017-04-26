@@ -42,12 +42,10 @@ zIndex | 10 | int | Z-index set to tooltip when visible.
 
 Use following HTML markup to implement a tooltip:
 
-
 ```html
 <!-- EXAMPLE 1: BLOCK ELEMENTS -->
  <input name="example2" type="button" class="has-tooltip" value="button with tooltip" aria-describedby="tt2">
 <span class="tooltip" id="tt2">This button is really useful. You can click on it!</span>
-
 
 <!-- EXAMPLE 1: INLINE ELEMENTS -->
 <p><span class="has-tooltip" aria-describedby="tt3" id="demo3" style="color: #cb6129;">Lorem ipsum dolor sit amet</span> <span class="tooltip" id="tt3">This phrase is nonsense.</span>, consectetur adipiscing elit. Pellentesque vel urna vel urna sodales semper quis in nisi. Nam id metus nec tortor tempus cursus. Etiam eget tortor ac quam faucibus pretium. In rhoncus lobortis risus eget semper. Suspendisse et pulvinar diam. Aliquam dictum ex nulla, et aliquet ante gravida id. Praesent eu tincidunt nunc, ac egestas nibh. Vivamus porttitor, ante eu placerat mollis, lacus neque aliquam arcu, eget elementum metus ante sed odio. Etiam libero diam, interdum sed pharetra nec, maximus pellentesque turpis. Suspendisse ex velit, sagittis efficitur tristique non, porttitor non nibh. Fusce placerat orci in enim aliquam, ut vestibulum turpis interdum.</p>
@@ -93,21 +91,18 @@ If you want, you can destroy a tooltip by passing **'destroy'** as a parameter t
 ```javascript
 $('.has-tooltip').ariaTooltip('destroy');
 ```
-
 Calling 'destroy' will remove all attributes added from the script from a tooltip, but the tooltip will remain in the DOM.
 If you want to completly remove the tooltip from the DOM, use instead  the **'remove'** method:
 
 ```javascript
 $('.has-tooltip').ariaTooltip('remove');
 ```
-
 **NOTE:** It is possible to initalise, destroy and remove multiple tooltips with a single function call. The **show** and **hide** methods instead can be called only on a single element at a time.
 
 
 ## Responsive mode
 
-The plugin supports an advanced responsive mode. This mode gives authors better control over the aspect and functionality of the tooltips on different devices. The responsive mode is enabled through the option **responsive**. This option accepts an array of objects with the settings for the differen breakpints (see code below). 
-
+The plugin supports an **advanced responsive mode**. This mode gives authors better control over the aspect and functionality of the tooltips on different devices. The responsive mode is enabled through the option **'responsive'**. This option accepts an array of objects with the settings for differen screen widths (see code below). 
 
 ```javascript
 $('.has-tooltip').ariaTooltip({
@@ -132,12 +127,98 @@ $('.has-tooltip').ariaTooltip({
     ]
   });
 ```
-When using responsive mode, each object passed as an array entry, should have the property **breakpoint** set to an **integer greater than 0**. The option **breakpoint** represents the minimum device width, therefore, is recommended to set this option to **1** in the first object to address all screen sizes with the first entry.
-@ cosa succede se i breakpoint non coprono tutte le dimensioni possibili
+The option **Breakpoint** sets the minimum screen width (in px) and is **allowed only in responsive mode**, e.g. as a property of an object of the 'responsive' array. All other options have no restrictions and can be used both in normal and responsive mode.
 
-@ quali opzioni sono compatibili con la modalita responsive e quali no.
+Options who are valid for any screen width can and should be set outside of the option **'responsive'**.
+Consider following example:
 
-@ cosa succede se alcune opzioni vengono tralasciate.
+```javascript
+$('.has-tooltip').ariaTooltip({
+    responsive: [
+      {
+        breakpoint: 1,
+        position: 'right',
+        [...]
+      },
+      {
+        breakpoint: 768,
+        position: 'right',
+        [...]
+      },
+      {
+        breakpoint: 992,
+        position: 'right',
+        [...]
+      }
+    ]
+  });
+```
+
+Although this code would perfectly work, is recommended to set the option **'position'** only once:
+
+```javascript
+$('.has-tooltip').ariaTooltip({
+    position: 'right',
+    responsive: [
+      {
+        breakpoint: 1,
+        [...]
+      },
+      {
+        breakpoint: 768,
+        [...]
+      },
+      {
+        breakpoint: 992,
+        [...]
+      }
+    ]
+  });
+```
+
+When using responsive mode, it is important to cover all screen widths by setting the first **breakpoint** to **1** or to the minimum screen width possible. Also all objects **must be sorted ascendingly by breakpoint** for the plugin to work correctly:
+
+```javascript
+$('.has-tooltip').ariaTooltip({
+    responsive: [
+      {
+        breakpoint: 768,
+        [...]
+      },
+      {
+        breakpoint: 1,
+        [...]
+      },
+      {
+        breakpoint: 992,
+        [...]
+      }
+    ]
+  });
+```
+
+This code would cause an error!
+
+The correct initialisation code is instead the following:
+
+```javascript
+$('.has-tooltip').ariaTooltip({
+    responsive: [
+      {
+        breakpoint: 1,    //first breakpoint
+        [...]             //options for screens >= 1px width
+      },
+      {
+        breakpoint: 768,  //second breakpoint
+        [...]             //options for screens >= 768px width
+      },
+      {
+        breakpoint: 992,  //third breakpoint
+        [...]             //options for screens >= 992px width
+      }
+    ]
+  });
+```
 
 
 # LICENSE
