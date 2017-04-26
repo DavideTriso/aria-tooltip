@@ -23,7 +23,7 @@ Developed and tested with jQuery 3.2.1
 
 Name | Default | Type | Description
 -----|---------|------|-------------
-position | top | token | Set whre the tooltip should be positioned relative to the element it blongs to. Accepted values: top, left, right, bottom, screen-top, screen-bottom.
+position | top | token | Set whre the tooltip should be positioned relative to the element it blongs to. Accepted values: **top, left, right, bottom, screen-top, screen-bottom**.
 translateX | 0 | float | Offset tooltip on the X axis by a given value to adjust distance between tooltip and element (in rem units).
 translateY | 0 | float | Offset tooltip on the Y axis by a given value to adjust distance between tooltip and element (in rem units).
 modifierClass | tooltip_top | string | Class added to tooltip when visible to modify default aspect. (Some ready-to-use modifier classes are already defined in css/scss).
@@ -44,14 +44,14 @@ Use following HTML markup to implement a tooltip:
 
 ```html
 <!-- EXAMPLE 1: BLOCK ELEMENTS -->
- <input name="example2" type="button" class="has-tooltip" value="button with tooltip" aria-describedby="tt2">
+<input name="example2" type="button" class="has-tooltip" value="button with tooltip" aria-describedby="tt2">
 <span class="tooltip" id="tt2">This button is really useful. You can click on it!</span>
 
-<!-- EXAMPLE 1: INLINE ELEMENTS -->
+<!-- EXAMPLE 2: INLINE ELEMENTS -->
 <p><span class="has-tooltip" aria-describedby="tt3" id="demo3" style="color: #cb6129;">Lorem ipsum dolor sit amet</span> <span class="tooltip" id="tt3">This phrase is nonsense.</span>, consectetur adipiscing elit. Pellentesque vel urna vel urna sodales semper quis in nisi. Nam id metus nec tortor tempus cursus. Etiam eget tortor ac quam faucibus pretium. In rhoncus lobortis risus eget semper. Suspendisse et pulvinar diam. Aliquam dictum ex nulla, et aliquet ante gravida id. Praesent eu tincidunt nunc, ac egestas nibh. Vivamus porttitor, ante eu placerat mollis, lacus neque aliquam arcu, eget elementum metus ante sed odio. Etiam libero diam, interdum sed pharetra nec, maximus pellentesque turpis. Suspendisse ex velit, sagittis efficitur tristique non, porttitor non nibh. Fusce placerat orci in enim aliquam, ut vestibulum turpis interdum.</p>
 ```
 
-**IMPORTANT:** Do not forget to set an id on the tooltip and expose the relation between the tooltip and the element it belongs to by setting the attribute `aria-describedby`.
+**IMPORTANT:** Do not forget to **set an id on the tooltip** and **expose the relation between the tooltip and the element it belongs to by setting the attribute `aria-describedby`**.
 
 ### JS: Initialisation
 
@@ -70,7 +70,7 @@ The plugin supports following methods: show, hide, destroy, remove.
 
 ### Show
 
-In order to show a tooltip call **ariaTooltip** and pass **'show'** as parameter:
+In order to make a tooltip visible, call **ariaTooltip** and pass **'show'** as parameter:
 
 ```javascript
 $('#my-element').ariaTooltip('show');
@@ -91,18 +91,17 @@ If you want, you can destroy a tooltip by passing **'destroy'** as a parameter t
 ```javascript
 $('.has-tooltip').ariaTooltip('destroy');
 ```
-Calling 'destroy' will remove all attributes added from the script from a tooltip, but the tooltip will remain in the DOM.
-If you want to completly remove the tooltip from the DOM, use instead  the **'remove'** method:
+Calling 'destroy' will remove all attributes added from the script from a tooltip, but the tooltip will remain in the DOM. If you want to completly remove the tooltip from the DOM, use instead  the **'remove'** method:
 
 ```javascript
 $('.has-tooltip').ariaTooltip('remove');
 ```
-**NOTE:** It is possible to initalise, destroy and remove multiple tooltips with a single function call. The **show** and **hide** methods instead can be called only on a single element at a time.
+**NOTE:** It is possible to initalise, destroy and remove multiple tooltips with a single function call, but the **show** and **hide** methods can instead be called only on a single element at a time.
 
 
 ## Responsive mode
 
-The plugin supports an **advanced responsive mode**. This mode gives authors better control over the aspect and functionality of the tooltips on different devices. The responsive mode is enabled through the option **'responsive'**. This option accepts an array of objects with the settings for differen screen widths (see code below). 
+The plugin supports an **advanced responsive mode**. This mode gives authors better control over the aspect and functionality of the tooltips on different devices. The responsive mode is enabled through the option **'responsive'**. This option **accepts an array of objects** with the options for differen screen widths (see code below). 
 
 ```javascript
 $('.has-tooltip').ariaTooltip({
@@ -127,9 +126,9 @@ $('.has-tooltip').ariaTooltip({
     ]
   });
 ```
-The option **Breakpoint** sets the minimum screen width (in px) and is **allowed only in responsive mode**, e.g. as a property of an object of the 'responsive' array. All other options have no restrictions and can be used both in normal and responsive mode.
+The option **'breakpoint'** sets the minimum screen width (in px) and is **allowed only in responsive mode**, e.g. as a property of an object of the 'responsive' array. Except for 'breakpoint' and 'responsive', all other options are not restricted to a specific mode.
 
-Options who are valid for any screen width can and should be set outside of the option **'responsive'**.
+Options that applies to any screen width **can and should** be set outside of the option **'responsive'** to keep code clear and reduce the amount of operations needed for the initialisation of the plugin.
 Consider following example:
 
 ```javascript
@@ -154,11 +153,11 @@ $('.has-tooltip').ariaTooltip({
   });
 ```
 
-Although this code would perfectly work, is recommended to set the option **'position'** only once:
+Although this code would perfectly work, it is strongly recommended to set the option **'position'** only once:
 
 ```javascript
 $('.has-tooltip').ariaTooltip({
-    position: 'right',
+    position: 'right',  //This option is valid for all breakpoints
     responsive: [
       {
         breakpoint: 1,
@@ -176,7 +175,7 @@ $('.has-tooltip').ariaTooltip({
   });
 ```
 
-When using responsive mode, it is important to cover all screen widths by setting the first **breakpoint** to **1** or to the minimum screen width possible. Also all objects **must be sorted ascendingly by breakpoint** for the plugin to work correctly:
+When using responsive mode, it is important to **cover all screen widths** by setting the first **'breakpoint'** to **1** or to the minimum screen width possible. Also, for the plugin to work correctly, all objects **must be sorted ascendingly by breakpoint**:
 
 ```javascript
 $('.has-tooltip').ariaTooltip({
@@ -197,7 +196,7 @@ $('.has-tooltip').ariaTooltip({
   });
 ```
 
-This code would cause an error!
+This code would cause an error and the plugin wont work correctly!
 
 The correct initialisation code is instead the following:
 
@@ -210,11 +209,11 @@ $('.has-tooltip').ariaTooltip({
       },
       {
         breakpoint: 768,  //second breakpoint
-        [...]             //options for screens >= 768px width
+        [...]             //options for screens >= 768px width (wich is > first breakpoint)
       },
       {
         breakpoint: 992,  //third breakpoint
-        [...]             //options for screens >= 992px width
+        [...]             //options for screens >= 992px width (wich is > second breakpoint)
       }
     ]
   });
