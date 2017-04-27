@@ -222,4 +222,4 @@ $('.has-tooltip').ariaTooltip({
 
 # LICENSE
 
-FLOSS: Free/Libre and Open Source Software.
+**FLOSS** - Free/Libre and Open Source Software.
