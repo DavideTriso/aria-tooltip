@@ -220,6 +220,8 @@ $('.has-tooltip').ariaTooltip({
 ```
 
 
-# LICENSE
+## LICENSE
 
-**FLOSS** - Free/Libre and Open Source Software.
+This project is licensed under the terms of the **MIT license**.
+
+See [LICENSE.md](LICENSE.md) for detailed informations.
