@@ -1,11 +1,12 @@
+//=============================
 //IMPORT
-//-----------------------------
+//=============================
 @import 'breakpoints';
-@import 'placeholders/placeholders';
-@import 'css-mixins/css-mixins';
-//-----------------------------
+@import '01_placeholders/import';
+@import '02_css-mixins/import';
+//=============================
 //VARIABLES
-//-----------------------------
+//=============================
 $tooltipPadding: 0.5rem;
 $tooltipMaxWidth: 10rem;
 $tooltipColor: #fff;
@@ -14,7 +15,11 @@ $tooltipBorder: 0.1rem solid #ad5323;
 $tooltipBorderRadius: 0.25rem;
 $tooltipBoxShadow: 0.05rem 0.05rem 0.1rem 0.05rem rgba(127, 127, 127, 0.5);
 $tooltipArrowSize: 0.8rem;
+//=============================
 //CSS RULES
+//=============================
+//-----------------------------
+//BLOCK
 //-----------------------------
 .tooltip {
   background-color: $tooltipBackgroundColor;
@@ -33,16 +38,18 @@ $tooltipArrowSize: 0.8rem;
   padding: $tooltipPadding;
   @extend %position-fixed;
 }
+//-----------------------------
 //MODIFIERS
+//-----------------------------
 .tooltip_bottom,
 .tooltip_left,
 .tooltip_top,
 .tooltip_right {
   &:after {
     background-color: $tooltipBackgroundColor;
+    border-bottom-right-radius: $tooltipArrowSize;
     border-left: $tooltipBorder;
     border-top: $tooltipBorder;
-    border-bottom-right-radius: $tooltipArrowSize;
     @extend %box-sizing-border-box;
     @extend %content;
     @extend %display-block;

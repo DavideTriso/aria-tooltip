@@ -47,9 +47,9 @@
 .tooltip_top:after,
 .tooltip_right:after {
   background-color: #cb6129;
+  border-bottom-right-radius: 0.8rem;
   border-left: 0.1rem solid #ad5323;
   border-top: 0.1rem solid #ad5323;
-  border-bottom-right-radius: 0.8rem;
   height: 0.8rem;
   width: 0.8rem; }
 
