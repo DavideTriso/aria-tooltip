@@ -21,15 +21,15 @@ Developed and tested with jQuery 3.2.1
 
 ## Options
 
-Name | Default | Type | Description
------|---------|------|-------------
-position | top | token | Set whre the tooltip should be positioned relative to the element it blongs to. Accepted values: **top, left, right, bottom, screen-top, screen-bottom**.
-translateX | 0 | float | Offset tooltip on the X axis by a given value to adjust distance between tooltip and element (in rem units).
-translateY | 0 | float | Offset tooltip on the Y axis by a given value to adjust distance between tooltip and element (in rem units).
-modifierClass | tooltip_top | string | Class added to tooltip when visible to modify default aspect. (Some ready-to-use modifier classes are already defined in css/scss).
-responsive | false | false or array of objects | Enable responsive mode by passing an array of object with settings for different breakpoints. For detailed infos check the section **'responsive mode'**.
-fadeSpeed | 100 | int (>= 0) | Duration of fade-in and fade-out animation.
-zIndex | 10 | int | Z-index set to tooltip when visible.
+Name | Default | Type | Description | Required or optional
+-----|---------|------|-------------|-------------------------
+position | top | token | Set whre the tooltip should be positioned relative to the element it blongs to. Accepted values: **top, left, right, bottom, screen-top, screen-bottom**. | optional
+translateX | 0 | float | Offset tooltip on the X axis by a given value to adjust distance between tooltip and element (in rem units). | optional
+translateY | 0 | float | Offset tooltip on the Y axis by a given value to adjust distance between tooltip and element (in rem units). | optional
+modifierClass | tooltip_top | string | Class added to tooltip when visible to modify default aspect. (Some ready-to-use modifier classes are already defined in css/scss). | optional
+responsive | false | false or array of objects | Enable responsive mode by passing an array of object with settings for different breakpoints. For detailed infos check the section **'responsive mode'**. | optional
+fadeSpeed | 100 | int (>= 0) | Duration of fade-in and fade-out animation. | optional
+zIndex | 10 | int | Z-index set to tooltip when visible. | optional
 
 ## Usage
 
