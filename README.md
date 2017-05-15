@@ -6,7 +6,7 @@ jQuery plugin for **accessible** tooltips. **WAI ARIA 1.1** compliant.
 * Simply target all devices with 'responsive mode'.
 * SASS/SCSS files for simple and quick UI customisations.
 * Only 4KB (minified).
-* Fully compatible with **t-css-framework**
+* Fully compatible with [**t** css-framework](https://github.com/DavideTriso/t-css-framework)
 * Runs in strict mode.
 
 ## Dependencies
