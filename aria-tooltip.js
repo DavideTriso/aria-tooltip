@@ -236,7 +236,7 @@
     if (settings.modifierClass !== false) {
       tooltip.addClass(settings.modifierClass);
     }
-    tooltip.attr(a.aHi, a.f).fadeIn(settings.fadeSpeed);
+    tooltip.attr(a.aHi, a.f).stop().fadeIn(settings.fadeSpeed);
 
     //close tooltip with esc button
     $(window).on('keydown', function (event) {
@@ -259,7 +259,7 @@
       l = settings.length;
 
     //hide tooltip
-    tooltip.attr(a.aHi, a.t).fadeOut(settings.fadeSpeed, function () {
+    tooltip.attr(a.aHi, a.t).stop().fadeOut(settings.fadeSpeed, function () {
       if (Array.isArray(settings)) {
         //remove all modifier classes from tooltip
         for (i; i < l; i = i + 1) {
