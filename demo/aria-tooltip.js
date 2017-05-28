@@ -84,15 +84,7 @@
   //-----------------------------------------------
 
   methods.init = function (userSettings, elementWithTooltip) {
-    var settings = $.extend({
-        translateX: 0, //%
-        translateY: 0, //%
-        position: 'top', //top, left, right, bottom, screen-top, screen-bottom.
-        modifierClass: 'tooltip_top',
-        responsive: false,
-        fadeSpeed: 100,
-        zIndex: 10
-      }, userSettings),
+    var settings = $.extend({}, $.fn.ariaTooltip.defaultSettings, userSettings),
       elements = {
         elementWithTooltip: elementWithTooltip,
         tooltip: getTooltip(elementWithTooltip)
@@ -340,6 +332,17 @@
           break;
       }
     }
+  };
+
+
+  $.fn.ariaTooltip.defaultSettings = {
+    translateX: 0, //%
+    translateY: 0, //%
+    position: 'top', //top, left, right, bottom, screen-top, screen-bottom.
+    modifierClass: 'tooltip_top',
+    responsive: false,
+    fadeSpeed: 100,
+    zIndex: 10
   };
 }(jQuery));
 
