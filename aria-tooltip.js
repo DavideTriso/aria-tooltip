@@ -1,7 +1,6 @@
 (function ($) {
   'use strict';
-  var tooltipsArray = [],
-    methods = {},
+  var methods = {},
     count = 0,
     a = {
       aHi: 'aria-hidden',
@@ -24,22 +23,6 @@
   //return tooltip starting from element with tooltip
   function getTooltip(element) {
     return $('#' + element.attr(a.aDes));
-  }
-
-  //Perform array lookup and return indexes of the needed tooltip
-
-  function getTooltipIndex(elementWithTooltip) {
-    var i = 0,
-      l = tooltipsArray.length,
-      elementWithTooltipId = elementWithTooltip.attr('id'),
-      indexTooltip = 0;
-
-    for (i; i < l; i = i + 1) {
-      indexTooltip = tooltipsArray[i][0].indexOf(elementWithTooltipId);
-      if (indexTooltip !== -1) {
-        return i;
-      }
-    }
   }
 
   //check breakpoints
@@ -85,10 +68,7 @@
 
   methods.init = function (userSettings, elementWithTooltip) {
     var settings = $.extend({}, $.fn.ariaTooltip.defaultSettings, userSettings),
-      elements = {
-        elementWithTooltip: elementWithTooltip,
-        tooltip: getTooltip(elementWithTooltip)
-      },
+      tooltip = getTooltip(elementWithTooltip),
       elementWithTooltipId = '',
       breakpointsArray = [],
       responsiveSettings = [],
@@ -104,7 +84,7 @@
     elementWithTooltipId = elementWithTooltip.attr('id');
 
     //set role and initialise tooltip
-    elements.tooltip.attr(a.r, 'tooltip').attr(a.aHi, a.t).hide();
+    tooltip.attr(a.r, 'tooltip').attr(a.aHi, a.t).hide();
 
 
 
@@ -130,10 +110,14 @@
 
 
     //save all data into array
-    tooltipArray.push(elementWithTooltipId, elements, settings, breakpointsArray, responsiveSettingsArray);
+    tooltipArray.push(elementWithTooltipId, tooltip, settings, breakpointsArray, responsiveSettingsArray);
+
+
+    //append tooltipArray to jquery object
+    elementWithTooltip.data('tooltipArray', tooltipArray);
 
     //push array to 1st. level array - tooltipsArray
-    tooltipsArray.push(tooltipArray);
+    //tooltipsArray.push(tooltipArray);
 
     //TOOLTIPS ARRAY ARCHITECTURE:
     /*
@@ -145,24 +129,24 @@
     */
 
     //Bind event handlers
-    elements.elementWithTooltip.on('mouseenter focus', function () {
-      methods.show(getTooltipIndex(elements.elementWithTooltip));
+    elementWithTooltip.on('mouseenter focus', function () {
+      methods.show($(this));
     });
 
-    elements.elementWithTooltip.on('mouseout', function () {
-      if (!elements.elementWithTooltip.is(':focus')) {
-        methods.hide(getTooltipIndex(elements.elementWithTooltip));
+    elementWithTooltip.on('mouseout', function () {
+      if (!elementWithTooltip.is(':focus')) {
+        methods.hide($(this));
       }
     });
 
-    elements.elementWithTooltip.on('blur', function () {
-      methods.hide(getTooltipIndex(elements.elementWithTooltip));
+    elementWithTooltip.on('blur', function () {
+      methods.hide($(this));
     });
 
     //Close tooltips on resize and scroll
     //to prevent positioning problems
     $(window).on('resize scroll', function () {
-      methods.hide(getTooltipIndex(elements.elementWithTooltip));
+      methods.hide(elementWithTooltip);
     });
 
     //increment count after every initalisation
@@ -175,15 +159,16 @@
 
   //SHOW TOOLTIP
   //-----------------------------------------------
-  methods.show = function (index) {
-    var tooltip = tooltipsArray[index][1].tooltip,
-      elementWithTooltip = tooltipsArray[index][1].elementWithTooltip,
+  methods.show = function (elementWithTooltip) {
+    var tooltip = elementWithTooltip.data('tooltipArray')[1],
       tooltipSize = getElementWidthAndHeight(tooltip),
       elementWithTooltipSize = getElementWidthAndHeight(elementWithTooltip),
       elementWithTooltipPosition = getElementPosition(elementWithTooltip),
       screenSize = getElementWidthAndHeight($(window)),
-      breakpoint = tooltipsArray[index][3].length > 0 ? getBreakpoint(tooltipsArray[index][3]) : false,
-      settings = tooltipsArray[index][4].length > 0 ? tooltipsArray[index][4][breakpoint] : tooltipsArray[index][2],
+      breakpoint = elementWithTooltip.data('tooltipArray')[3].length > 0 ?
+      getBreakpoint(elementWithTooltip.data('tooltipArray')[3]) : false,
+      settings = elementWithTooltip.data('tooltipArray')[4].length > 0 ?
+      elementWithTooltip.data('tooltipArray')[4][breakpoint] : elementWithTooltip.data('tooltipArray')[2],
       left = 0,
       top = 0,
       bottom = 'auto';
@@ -233,7 +218,7 @@
     //close tooltip with esc button
     $(window).on('keydown', function (event) {
       if (event.keyCode === 27 && checkForSpecialKeys(event) === true) {
-        methods.hide(index);
+        methods.hide(elementWithTooltip);
       }
     });
   };
@@ -243,10 +228,12 @@
 
   //HIDE TOOLTIP
   //-----------------------------------------------
-  methods.hide = function (index) {
-    var tooltip = tooltipsArray[index][1].tooltip,
-      breakpoint = tooltipsArray[index][3].length > 0 ? getBreakpoint(tooltipsArray[index][3]) : false,
-      settings = tooltipsArray[index][4].length > 0 ? tooltipsArray[index][4][breakpoint] : tooltipsArray[index][2],
+  methods.hide = function (elementWithTooltip) {
+    var tooltip = elementWithTooltip.data('tooltipArray')[1],
+      breakpoint = elementWithTooltip.data('tooltipArray')[3].length > 0 ?
+      getBreakpoint(elementWithTooltip.data('tooltipArray')[3]) : false,
+      settings = elementWithTooltip.data('tooltipArray')[4].length > 0 ?
+      elementWithTooltip.data('tooltipArray')[4][breakpoint] : elementWithTooltip.data('tooltipArray')[2],
       i = 0,
       l = settings.length;
 
@@ -255,7 +242,7 @@
       if (Array.isArray(settings)) {
         //remove all modifier classes from tooltip
         for (i; i < l; i = i + 1) {
-          tooltip.removeClass(tooltipsArray[i][4].modifierClass);
+          tooltip.removeClass(elementWithTooltip.data('tooltipArray')[4].modifierClass);
         }
       } else {
         tooltip.removeClass(settings.modifierClass);
@@ -271,17 +258,17 @@
 
   //DESTROY TOOLTIP
   //-----------------------------------------------
-  methods.destroy = function (index) {
+  methods.destroy = function (elementWithTooltip) {
 
     //hide tooltip if open
-    methods.hide(index);
+    methods.hide(elementWithTooltip);
 
     //remove attributes from tooltip and element with tooltip
-    tooltipsArray[index][1].tooltip.removeAttr(a.r);
-    tooltipsArray[index][1].elementWithTooltip.removeAttr(a.aDes).unbind('focus blur mouseenter mouseout');
+    elementWithTooltip.data('tooltipArray')[1].removeAttr(a.r);
+    elementWithTooltip.removeAttr(a.aDes).unbind('focus blur mouseenter mouseout');
 
-    //remove entry from array
-    tooltipsArray.splice(index, 1);
+    //remove data from object
+    elementWithTooltip.removeData('tooltipArray');
   };
 
 
@@ -289,13 +276,13 @@
 
   //REMOVE TOOLTIP
   //-----------------------------------------------
-  methods.remove = function (index) {
+  methods.remove = function (elementWithTooltip) {
     //remove attributes from tooltip and element with tooltip
-    tooltipsArray[index][1].tooltip.remove();
-    tooltipsArray[index][1].elementWithTooltip.removeAttr(a.aDes).unbind('focus blur mouseenter mouseout');
+    elementWithTooltip.data('tooltipArray')[1].remove();
+    elementWithTooltip.removeAttr(a.aDes).unbind('focus blur mouseenter mouseout');
 
-    //remove entry from array
-    tooltipsArray.splice(index, 1);
+    //remove data from object
+    elementWithTooltip.removeData('tooltipArray');
   };
 
 
@@ -315,19 +302,19 @@
       //call public methods
       switch (userSettings) {
         case 'show':
-          methods.show(getTooltipIndex($(this)));
+          methods.show($(this)[0]);
           break;
         case 'hide':
-          methods.hide(getTooltipIndex($(this)));
+          methods.hide($(this)[0]);
           break;
         case 'destroy':
           this.each(function () {
-            methods.destroy(getTooltipIndex($(this)));
+            methods.destroy($(this)[0]);
           });
           break;
         case 'remove':
           this.each(function () {
-            methods.remove(getTooltipIndex($(this)));
+            methods.remove($(this)[0]);
           });
           break;
       }
