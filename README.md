@@ -70,7 +70,7 @@ The plugin supports following methods: show, hide, destroy, remove.
 
 ### Show
 
-In order to make a tooltip visible, call **ariaTooltip** and pass **'show'** as parameter:
+To show a tooltip, call **ariaTooltip** and pass **'show'** as parameter:
 
 ```javascript
 $('#my-element').ariaTooltip('show');
@@ -78,7 +78,7 @@ $('#my-element').ariaTooltip('show');
 
 ### Hide
 
-In order to hide a tooltip call **ariaTooltip** and pass **'hide'** as parameter:
+To hide a tooltip call **ariaTooltip** and pass **'hide'** as parameter:
 
 ```javascript
 $('#my-element').ariaTooltip('hide');
@@ -96,7 +96,6 @@ Calling 'destroy' will remove all attributes added from the script from a toolti
 ```javascript
 $('.has-tooltip').ariaTooltip('remove');
 ```
-**NOTE:** It is possible to initalise, destroy and remove multiple tooltips with a single function call, but the **show** and **hide** methods can instead be called only on a single element at a time.
 
 
 ## Responsive mode

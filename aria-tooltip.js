@@ -302,19 +302,23 @@
       //call public methods
       switch (userSettings) {
         case 'show':
-          methods.show($(this)[0]);
+          this.each(function () {
+            methods.show($(this));
+          });
           break;
         case 'hide':
-          methods.hide($(this)[0]);
+          this.each(function () {
+            methods.hide($(this));
+          });
           break;
         case 'destroy':
           this.each(function () {
-            methods.destroy($(this)[0]);
+            methods.destroy($(this));
           });
           break;
         case 'remove':
           this.each(function () {
-            methods.remove($(this)[0]);
+            methods.remove($(this));
           });
           break;
       }
