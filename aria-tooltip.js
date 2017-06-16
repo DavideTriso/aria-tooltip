@@ -78,7 +78,7 @@
       l = 0;
 
     //set id on element with tooltip, if not set
-    setId(elementWithTooltip, 'element-tt-', count);
+    setId(elementWithTooltip, 'aria-tt-', count);
 
     //get id of element with tooltip and save in varaible
     elementWithTooltipId = elementWithTooltip.attr('id');
