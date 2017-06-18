@@ -16,7 +16,7 @@
   //set id on element if not set
   function setId(element, id, i) {
     if (!element.is('[id]')) {
-      element.attr('id', id + (i + 1));
+      element.attr('id', `${id}${i + 1}`);
     }
   }
 
@@ -84,9 +84,11 @@
     elementWithTooltipId = elementWithTooltip.attr('id');
 
     //set role and initialise tooltip
-    tooltip.attr(a.r, 'tooltip').attr(a.aHi, a.t).hide();
+    tooltip.attr(a.r, 'tooltip').attr(a.aHi, a.t);
 
-
+    if (!settings.cssTransitions) {
+      tooltip.hide();
+    }
 
 
     //enable responsive mode if 'responsive' is not false 
@@ -108,58 +110,73 @@
       }
     }
 
-
     //save all data into array
     tooltipArray.push(elementWithTooltipId, tooltip, settings, breakpointsArray, responsiveSettingsArray);
-
 
     //append tooltipArray to jquery object
     elementWithTooltip.data('tooltipArray', tooltipArray);
 
-    //push array to 1st. level array - tooltipsArray
-    //tooltipsArray.push(tooltipArray);
-
-    //TOOLTIPS ARRAY ARCHITECTURE:
-    /*
-    tooltipsArray ---> [i] ---> [0] Id of element with tooltip
-                           ---> [1] Object wih elements
-                           ---> [2] Object with settings
-                           ---> [3] Array with breakpoints
-                           ---> [4] responsiveSettingsArray[i] ---> Settings for each breakpoint
-    */
-
     //Bind event handlers
-    elementWithTooltip.on('mouseenter focus', function () {
+    elementWithTooltip.on('mouseenter.ariaTooltip focus.ariaTooltip', function () {
       methods.show($(this));
     });
 
-    elementWithTooltip.on('mouseout', function () {
+    elementWithTooltip.on('mouseout.ariaTooltip', function () {
       if (!elementWithTooltip.is(':focus')) {
         methods.hide($(this));
       }
     });
 
-    elementWithTooltip.on('blur', function () {
+    elementWithTooltip.on('blur.ariaTooltip', function () {
       methods.hide($(this));
     });
 
-    //Close tooltips on resize and scroll
-    //to prevent positioning problems
-    $(window).on('resize scroll', function () {
-      methods.hide(elementWithTooltip);
+    $(window).on('resize.ariaTooltip scroll.ariaTooltip', function () {
+      methods.position(elementWithTooltip);
     });
+
 
     //increment count after every initalisation
     count = count + 1;
   };
 
 
-
-
-
   //SHOW TOOLTIP
   //-----------------------------------------------
   methods.show = function (elementWithTooltip) {
+    var tooltip = elementWithTooltip.data('tooltipArray')[1],
+      breakpoint = elementWithTooltip.data('tooltipArray')[3].length > 0 ?
+      getBreakpoint(elementWithTooltip.data('tooltipArray')[3]) : false,
+      settings = elementWithTooltip.data('tooltipArray')[4].length > 0 ?
+      elementWithTooltip.data('tooltipArray')[4][breakpoint] : elementWithTooltip.data('tooltipArray')[2],
+      modifierClass = settings.modifierClass !== false ? settings.modifierClass : '';
+
+    //position tooltip relative to the element owning the tooltip
+    methods.position(elementWithTooltip);
+
+    //update attributes
+    tooltip.attr(a.aHi, a.f);
+
+    //add classes to tooltip
+    tooltip.addClass(`${modifierClass} ${settings.tooltipOpenClass}`);
+
+    //aminate with js if css transitions are disabled
+    if (!settings.cssTransitions) {
+      tooltip.stop().fadeIn(settings.fadeSpeed)
+    }
+
+    //close tooltip with esc button
+    $(window).on('keydown.ariaTooltip', function (event) {
+      if (event.keyCode === 27 && checkForSpecialKeys(event) === true) {
+        methods.hide(elementWithTooltip);
+      }
+    });
+  };
+
+
+  //POSITION TOOLTIP
+  //-----------------------------------------------
+  methods.position = function (elementWithTooltip) {
     var tooltip = elementWithTooltip.data('tooltipArray')[1],
       tooltipSize = getElementWidthAndHeight(tooltip),
       elementWithTooltipSize = getElementWidthAndHeight(elementWithTooltip),
@@ -202,27 +219,13 @@
       left: left,
       top: top,
       bottom: bottom,
-      '-webkit-transform': 'translate(' + settings.translateX + 'rem, ' + settings.translateY + 'rem)',
-      '-moz-transform': 'translate(' + settings.translateX + 'rem, ' + settings.translateY + 'rem)',
-      '-ms-transform': 'translate(' + settings.translateX + 'rem, ' + settings.translateY + 'rem)',
-      transform: 'translate(' + settings.translateX + 'rem, ' + settings.translateY + 'rem)',
+      '-webkit-transform': `translate(${settings.translateX}rem, ${settings.translateY}rem)`,
+      '-moz-transform': `translate(${settings.translateX}rem, ${settings.translateY}rem)`,
+      '-ms-transform': `translate(${settings.translateX}rem, ${settings.translateY}rem)`,
+      transform: `translate(${settings.translateX}rem, ${settings.translateY}rem)`,
       'z-index': settings.zIndex
     });
-
-    //show tooltip
-    if (settings.modifierClass !== false) {
-      tooltip.addClass(settings.modifierClass);
-    }
-    tooltip.attr(a.aHi, a.f).stop().fadeIn(settings.fadeSpeed);
-
-    //close tooltip with esc button
-    $(window).on('keydown', function (event) {
-      if (event.keyCode === 27 && checkForSpecialKeys(event) === true) {
-        methods.hide(elementWithTooltip);
-      }
-    });
   };
-
 
 
 
@@ -237,23 +240,22 @@
       i = 0,
       l = settings.length;
 
-    //hide tooltip
-    tooltip.attr(a.aHi, a.t).stop().fadeOut(settings.fadeSpeed, function () {
-      if (Array.isArray(settings)) {
-        //remove all modifier classes from tooltip
-        for (i; i < l; i = i + 1) {
-          tooltip.removeClass(elementWithTooltip.data('tooltipArray')[4].modifierClass);
-        }
-      } else {
-        tooltip.removeClass(settings.modifierClass);
-      }
-    });
+    //update attributes
+    tooltip.attr(a.aHi, a.t);
+
+
+    if (!settings.cssTransitions) {
+      tooltip.stop().fadeOut(settings.fadeSpeed, function () {
+        tooltip.removeClass(`${settings.modifierClass} ${settings.tooltipOpenClass}`);
+      });
+    } else {
+      tooltip.removeClass(`${settings.modifierClass} ${settings.tooltipOpenClass}`);
+    }
+
 
     //Unbind keydown event
-    $(window).unbind('keydown');
+    $(window).off('keydown.ariaTooltip');
   };
-
-
 
 
   //DESTROY TOOLTIP
@@ -331,8 +333,10 @@
     translateY: 0, //%
     position: 'top', //top, left, right, bottom, screen-top, screen-bottom.
     modifierClass: 'tooltip_top',
+    tooltipOpenClass: 'tooltip_open',
     responsive: false,
     fadeSpeed: 100,
+    cssTransitions: false,
     zIndex: 10
   };
 }(jQuery));

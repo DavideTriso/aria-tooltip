@@ -26,7 +26,9 @@ Name | Default | Type | Description | Required or optional
 position | top | token | Set whre the tooltip should be positioned relative to the element it blongs to. Accepted values: **top, left, right, bottom, screen-top, screen-bottom**. | optional
 translateX | 0 | float | Offset tooltip on the X axis by a given value to adjust distance between tooltip and element (in rem units). | optional
 translateY | 0 | float | Offset tooltip on the Y axis by a given value to adjust distance between tooltip and element (in rem units). | optional
+tooltipOpenClass | tooltip_open | string | Class added to tooltip when visible. | optional
 modifierClass | tooltip_top | string | Class added to tooltip when visible to modify default aspect. (Some ready-to-use modifier classes are already defined in css/scss). | optional
+cssTransitions | false | bool | Use css transitions to animate tooltip instead of JS. Check 'Using CSS transitions' for more infos. | default
 responsive | false | false or array of objects | Enable responsive mode by passing an array of object with settings for different breakpoints. For detailed infos check the section **'responsive mode'**. | optional
 fadeSpeed | 100 | int (>= 0) | Duration of fade-in and fade-out animation. | optional
 zIndex | 10 | int | Z-index set to tooltip when visible. | optional
@@ -217,6 +219,11 @@ $('.has-tooltip').ariaTooltip({
     ]
   });
 ```
+
+
+## Using CSS transitions
+
+By default the plugin is configured to use JS to show/hide the tooltips. Setting the option **cssTransitions** to 'true' will disable the JS animations and it is possible to implement show/hide animations directly in the css. In fact, the plugin toggles the class passed along with the option **tooltipOpenClass** and **modifierClasses** when a tooltip is toggled.
 
 
 ## LICENSE
