@@ -1,4 +1,4 @@
-(function ($) {
+(function ($, window) {
   'use strict';
   var methods = {},
     count = 0,
@@ -243,7 +243,6 @@
     //update attributes
     tooltip.attr(a.aHi, a.t);
 
-
     if (!settings.cssTransitions) {
       tooltip.stop().fadeOut(settings.fadeSpeed, function () {
         tooltip.removeClass(`${settings.modifierClass} ${settings.tooltipOpenClass}`);
@@ -251,7 +250,6 @@
     } else {
       tooltip.removeClass(`${settings.modifierClass} ${settings.tooltipOpenClass}`);
     }
-
 
     //Unbind keydown event
     $(window).off('keydown.ariaTooltip');
@@ -339,4 +337,4 @@
     cssTransitions: false,
     zIndex: 10
   };
-}(jQuery));
+}(jQuery, window));
