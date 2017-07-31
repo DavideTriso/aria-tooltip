@@ -1,340 +1,446 @@
-(function ($, window) {
-  'use strict';
-  var methods = {},
-    count = 0,
-    a = {
-      aHi: 'aria-hidden',
-      aDes: 'aria-describedby',
-      r: 'role',
-      t: 'true',
-      f: 'false'
-    };
+(function ($, window, document) {
+ 'use strict';
 
-  //PRIVATE FUNCTIONS
-  //-----------------------------------------------
+ var pluginName = 'ariaTooltip',
+  a = {
+   aHi: 'aria-hidden',
+   aDes: 'aria-describedby',
+   r: 'role',
+   t: 'true',
+   f: 'false'
+  },
+ win = $(window),
+ count = 0;
 
-  //set id on element if not set
-  function setId(element, id, i) {
-    if (!element.is('[id]')) {
-      element.attr('id', `${id}${i + 1}`);
+
+ //-----------------------------------------
+ //Private functions
+
+ /*
+  * Return the index of the currently active breakpoint
+  * based on window width
+  * Arguments: array with breakpoints and jQuery window object
+  */
+ function getCurrentBreakpoint(breakpoints, window) {
+  var l = breakpoints.length - 1,
+    screenWidth = window.width();
+  for (l; l >= 0; l = l - 1) {
+   if (screenWidth >= breakpoints[l]) {
+    return l;
+   }
+  }
+ }
+
+ function getElementSize(element) {
+  return {
+   width: element.outerWidth(),
+   height: element.outerHeight()
+  };
+ }
+
+
+ function getElementCornersOffsets(element, elementSize, window) {
+  var elementPosition = element.position(),
+      winScrollLeft = window.scrollLeft(),
+      winScrollTop = window.scrollTop();
+
+  return {
+   top: elementPosition.top - winScrollTop,
+   left: elementPosition.left - winScrollLeft,
+   bottom: elementPosition.top - winScrollTop + elementSize.height,
+   right: elementPosition.left - winScrollLeft + elementSize.width
+  };
+ }
+
+
+ //-----------------------------------------
+ // The actual plugin constructor
+ function AriaTooltip(element, userSettings) {
+  var self = this;
+
+  self.element = $(element); // the element with the tooltip
+  self.tooltip = $('#' + self.element.attr(a.aDes)); // the tooltip for the element
+  self.settings = $.extend({}, $.fn.ariaTooltip.defaultSettings, userSettings); //the settings
+  self.tooltipStatus = false; //the status of the tooltip (false = hidden, true = visible, 2 = visible)
+
+  //initialise the tooltip
+  self.init();
+ }
+
+ // Avoid Plugin.prototype conflicts
+ $.extend(AriaTooltip.prototype, {
+  init: function () {
+   var self = this,
+     settings = self.settings,
+     tooltip = self.tooltip,
+     element = self.element;
+
+   /*
+    * If cssTransitions are not enabled, then hide tooltip with scripting.
+    */
+   if (!settings.cssTransitions) {
+    tooltip
+     .hide()
+     .css('opacity', 0);
+   }
+
+   /*
+    * Initialise the tooltip by 
+    * setting role tooltip and aria-hidden to true
+    */
+   tooltip
+    .attr(a.r, 'tooltip')
+    .attr(a.aHi, a.t);
+
+
+   /*
+   * enable responsive mode if 'responsive' is not false.
+   * Generate array with breakpoints and
+   * array of objects with settings for each breakpoint
+   * 
+   * Also watch for window resize and update settings based on current screen size
+   */
+   if (settings.responsive) {
+    self.breakpoints = [];
+    self.currentBreakpoint = false;
+    self.currentModifierClass = false;
+    self.responsiveSettings = [];
+
+    //save responsive array to variable and get lenght
+    var responsiveSettings = settings.responsive,
+        l = responsiveSettings.length,
+        i = 0;
+
+    //delete responsive array from settigns object
+    delete settings.responsive;
+
+    //set modifierClass to false
+    settings.modifierClass = false;
+
+    //populate breakpoints array and responsive settigs array
+    for (i; i < l; i = i + 1) {
+     self.breakpoints.push(responsiveSettings[i].breakpoint);
+     self.responsiveSettings.push($.extend({}, settings, responsiveSettings[i]));
     }
-  }
 
-  //return tooltip starting from element with tooltip
-  function getTooltip(element) {
-    return $('#' + element.attr(a.aDes));
-  }
 
-  //check breakpoints
-  function getBreakpoint(breakpointsArray) {
-    var l = breakpointsArray.length - 1,
-      screenWidth = $(window).width();
-    for (l; l >= 0; l = l - 1) {
-      if (screenWidth >= breakpointsArray[l]) {
-        return l;
+    /*
+     * Update settings object when screen size changes,
+     * by calling updateSettigns.
+     */
+    self.updateSettings();
+    win.on('resize.' + pluginName, function () {
+     self.updateSettings();
+    });
+   }
+
+
+   //Bind event hander to element
+   //listen for focus and blur events if settings.focus is true
+   if (settings.focus) {
+    element.on('focus.' + pluginName + ' click.' + pluginName, function () {
+     self.show();
+    });
+
+    element.on('blur.' + pluginName, function () {
+     self.hide();
+    });
+   }
+
+   //listen for mouseneter and mouseout events if settings.mouseover is true
+   if (settings.mouseover) {
+    element.on('mouseenter.' + pluginName, function () {
+     self.show();
+    });
+
+    element.on('mouseout.' + pluginName, function () {
+     /*
+      * Hide tooltip on mouseout, only if element does not have focus.
+      * If element has focus, the tooltip must be hidden only when the element looses focus
+      * (Only when settings.focus is true, otherwise elements's focus should not affect tooltip behaviour).
+      */
+     if (settings.focus) {
+      if (!self.element.is(':focus')) {
+       self.hide();
       }
+     } else {
+      self.hide();
+     }
+    });
+   }
+
+
+   //Automatically hide tooltip on scroll and window resize
+   win.on('scroll.' + pluginName + ' resize.' + pluginName, function () {
+    self.hide();
+   });
+  },
+  updateSettings: function () {
+   /*
+    * Retrive the index of the current breakpoint based on screen width
+    * by calling getCurrentBreakpoint, and save to variable
+    */
+   var self = this,
+    currentBreakpoint = getCurrentBreakpoint(self.breakpoints, win);
+
+   if (self.currentBreakpoint !== currentBreakpoint) {
+
+    //Overwrite self.settings object with settings for current breakpoint    
+    self.settings = $.extend(self.settings, self.responsiveSettings[currentBreakpoint]); //the settings
+
+    //Update current breakpoint index
+    self.currentBreakpoint = currentBreakpoint;
+
+
+    //Upadte current modifierClass
+    if (self.currentModifierClass !== self.settings.modifierClass) {
+     self.tooltip
+      .removeClass(self.currentModifierClass)
+     .addClass(self.settings.modifierClass);
+
+     self.currentModifierClass = self.settings.modifierClass;
+
     }
-  }
+   }
+  },
+  positionTooltip: function () {
+   /*
+    * Check where to position the tooltip
+    * based on the elements's position and the tooltip position settings
+    */
+   var self = this,
+       settings = self.settings,
+       elementSize = getElementSize(self.element),
+       tooltipSize = getElementSize(self.tooltip),
+       elementCornersOffsets = getElementCornersOffsets(self.element, elementSize, win),
+       coordinates = {
+        top: 0,
+        left: 0,
+        bottom: 'auto'
+       };
 
-  //return object with element width and height
-  function getElementWidthAndHeight(element) {
-    return {
-      height: element.outerHeight(),
-      width: element.outerWidth()
-    };
-  }
+   switch (settings.position) {
+    case 'right':
+    default:
+     coordinates.left = elementCornersOffsets.right + settings.tooltipOffsetX;
+     coordinates.top = elementCornersOffsets.top + (elementSize.height / 2) - (tooltipSize.height / 2);
+     break;
+    case 'top':
+     coordinates.left = elementCornersOffsets.left + (elementSize.width / 2) - (tooltipSize.width / 2);
+     coordinates.top = elementCornersOffsets.top - tooltipSize.height - settings.tooltipOffsetY;
+     break;
+    case 'topRight':
+     coordinates.left = elementCornersOffsets.right + settings.tooltipOffsetX;
+     coordinates.top = elementCornersOffsets.top - tooltipSize.height - settings.tooltipOffsetY;
+     break;
+    case 'bottomRight':
+     coordinates.left = elementCornersOffsets.right + settings.tooltipOffsetX;
+     coordinates.top = elementCornersOffsets.bottom + settings.tooltipOffsetY;
+     break;
+    case 'bottom':
+     coordinates.left = elementCornersOffsets.left + (elementSize.width / 2) - (tooltipSize.width / 2);
+     coordinates.top = elementCornersOffsets.bottom + settings.tooltipOffsetY;
+     break;
+    case 'screenBottom':
+     coordinates.left = 0;
+     coordinates.top = 'auto';
+     coordinates.bottom = 0;
+     break;
+    case 'screenTop':
+     coordinates.left = 0;
+     coordinates.top = 0;
+     coordinates.bottom = 'auto';
+     break;
+    case 'left':
+     coordinates.left = elementCornersOffsets.left - tooltipSize.width - settings.tooltipOffsetX;
+     coordinates.top = elementCornersOffsets.top + (elementSize.height / 2) - (tooltipSize.height / 2);
+     break;
+    case 'topLeft':
+     coordinates.left = elementCornersOffsets.left - tooltipSize.width - settings.tooltipOffsetX;
+     coordinates.top = elementCornersOffsets.top - tooltipSize.height - settings.tooltipOffsetY;
+     break;
+    case 'bottomLeft':
+     coordinates.left = elementCornersOffsets.left - tooltipSize.width - settings.tooltipOffsetX;
+     coordinates.top = elementCornersOffsets.bottom + settings.tooltipOffsetY;
+     break;
+   }
 
-  //return object with element position
-  function getElementPosition(element) {
-    var elementPosition = element.position();
-    return {
-      left: elementPosition.left - $(window).scrollLeft(),
-      top: elementPosition.top - $(window).scrollTop()
-    };
-  }
+   self.tooltip.css({
+    'left': coordinates.left,
+    'top': coordinates.top,
+    'bottom': coordinates.bottom
+   });
+  },
+  show: function () {
+   var self = this,
+   settings = self.settings,
+   tooltip = self.tooltip;
+
+   /*
+    * Stop function execution if tooltip is currently visible.
+    * No need to show it again!
+    */
+   if (self.tooltipStatus) {
+    return;
+   }
+
+   /*
+    * Calculate where to position tooltip.
+    * the tooltip should be visible, in order to calculate the widht and height
+    */
+   if (!settings.cssTransitions) {
+    tooltip.show();
+   }
+   self.positionTooltip();
+
+   /*
+    * Show tooltip with js only if cssTransitions are disabled
+    * Otherwise the fadeIn animation should rely only on css
+    */
+   if (!settings.cssTransitions) {
+    tooltip.animate({
+     'opacity': 1
+    }, settings.fadeSpeed);
+   }
+
+   /*
+    * Update attributes on tooltip
+    * and add class for visible tooltip
+    */
+   tooltip
+    .attr(a.aHi, a.f)
+    .addClass(settings.tooltipOpenClass);
+
+   /*
+    * Update the tooltipStatus element
+    * by setting the value to true
+    */
+   self.tooltipStatus = true;
+  },
+  hide: function () {
+   var self = this,
+    settings = self.settings,
+    tooltip = self.tooltip;
 
 
-  function checkForSpecialKeys(event) {
-    if (!event.shiftKey && !event.ctrlKey && !event.altKey && !event.metaKey) {
-      //none is pressed
-      return true;
-    }
-    return false;
-  }
+   /*
+    * Stop function execution if tooltip is currently hidden.
+    * No need to hide it again!
+    */
+   if (!self.tooltipStatus) {
+    return;
+   }
 
 
-  //METHODS
-  //-----------------------------------------------
-
-  methods.init = function (userSettings, elementWithTooltip) {
-    var settings = $.extend({}, $.fn.ariaTooltip.defaultSettings, userSettings),
-      tooltip = getTooltip(elementWithTooltip),
-      elementWithTooltipId = '',
-      breakpointsArray = [],
-      responsiveSettings = [],
-      responsiveSettingsArray = [],
-      tooltipArray = [],
-      i = 0,
-      l = 0;
-
-    //set id on element with tooltip, if not set
-    setId(elementWithTooltip, 'aria-tt-', count);
-
-    //get id of element with tooltip and save in varaible
-    elementWithTooltipId = elementWithTooltip.attr('id');
-
-    //set role and initialise tooltip
-    tooltip.attr(a.r, 'tooltip').attr(a.aHi, a.t);
-
-    if (!settings.cssTransitions) {
+   /*
+    * Hide tooltip with js only if cssTransitions are disabled
+    * Otherwise the fadeOut animation should rely only on css
+    */
+   if (!settings.cssTransitions) {
+    tooltip
+     .stop()
+     .animate({
+      'opacity': 0
+     }, settings.fadeSpeed, function () {
       tooltip.hide();
+     });
+   }
+
+   /*
+    * Update attributes on tooltip
+    * and remove class for visible tooltip
+    */
+   tooltip
+    .attr(a.aHi, a.t)
+    .removeClass(settings.tooltipOpenClass);
+
+
+   /*
+    * Update the tooltipStatus element
+    * by setting the value to false
+    */
+   self.tooltipStatus = false;
+  },
+  methodCaller: function (methodName) {
+   var self = this;
+
+   switch (methodName) {
+    case 'show':
+     self.show();
+     break;
+    case 'hide':
+     self.hide();
+     break;
+    case 'reposition':
+     self.positionTooltip();
+     break;
+   }
+  }
+ });
+
+
+ // A really lightweight plugin wrapper around the constructor,
+ // preventing against multiple instantiations
+ $.fn[pluginName] = function (userSettings, methodArg) {
+  return this.each(function () {
+   var self = this;
+   /*
+    * If following conditions matches, then the plugin must be initialsied:
+    * Check if the plugin is instantiated for the first time
+    * Check if the argument passed is an object or undefined (no arguments)
+    */
+   if (!$.data(self, 'plugin_' + pluginName) && (typeof userSettings === 'object' || typeof userSettings === 'undefined')) {
+    $.data(self, 'plugin_' + pluginName, new AriaTooltip(self, userSettings));
+   } else if (typeof userSettings === 'string') {
+    $.data(self, 'plugin_' + pluginName).methodCaller(userSettings);
+   }
+  });
+ };
+
+
+ //Define default settings
+ $.fn[pluginName].defaultSettings = {
+  position: 'top', //top, left, right, bottom, topLeft, topRight, bottomLeft, bottomRight screenTop, screenBottom.
+  tooltipOffsetX: 5, //offset in px from element (does not apply id position is screenTop or screenBottom)
+  tooltipOffsetY: 5, //offset in px from element (does not apply id position is screenTop or screenBottom)
+  tooltipModifierClass: 'tooltip_top',
+  tooltipOpenClass: 'tooltip_open',
+  focus: true,
+  mouseover: true,
+  responsive: false,
+  fadeSpeed: 300,
+  cssTransitions: false
+ };
+
+}(jQuery, window, document));
+
+
+
+$(document).ready(function () {
+ 'use strict';
+ $('.has-tooltip').ariaTooltip({
+  mouseover: true,
+  responsive: [
+    {
+     breakpoint: 1,
+     position: 'screenTop',
+     fadeSpeed: 100,
+     tooltipOffsetY: 0,
+     modifierClass: 'tooltip_screen-top'
+    },
+    {
+     breakpoint: 768,
+     position: 'top',
+     modifierClass: 'tooltip_top',
+     tooltipOffsetX: 10
+    },
+    {
+     breakpoint: 992,
+     position: 'right',
+     fadeSpeed: 100,
+     modifierClass: 'tooltip_right',
+     tooltipOffsetX: 10
     }
-
-
-    //enable responsive mode if 'responsive' is not false 
-    //generate array with breakpoints and
-    //generate new array of objects with settings for each breakpoint
-    if (settings.responsive) {
-
-      //save responsive settings into array,
-      //delete not needed settings from settings object or set to default
-      responsiveSettings = settings.responsive;
-      delete settings.responsive;
-      settings.modifierClass = false;
-
-      l = responsiveSettings.length;
-      //i = 0;
-      for (i; i < l; i = i + 1) {
-        breakpointsArray.push(responsiveSettings[i].breakpoint);
-        responsiveSettingsArray.push($.extend({}, settings, responsiveSettings[i]));
-      }
-    }
-
-    //save all data into array
-    tooltipArray.push(elementWithTooltipId, tooltip, settings, breakpointsArray, responsiveSettingsArray);
-
-    //append tooltipArray to jquery object
-    elementWithTooltip.data('tooltipArray', tooltipArray);
-
-    //Bind event handlers
-    elementWithTooltip.on('mouseenter.ariaTooltip focus.ariaTooltip', function () {
-      methods.show($(this));
-    });
-
-    elementWithTooltip.on('mouseout.ariaTooltip', function () {
-      if (!elementWithTooltip.is(':focus')) {
-        methods.hide($(this));
-      }
-    });
-
-    elementWithTooltip.on('blur.ariaTooltip', function () {
-      methods.hide($(this));
-    });
-
-    $(window).on('resize.ariaTooltip scroll.ariaTooltip', function () {
-      methods.position(elementWithTooltip);
-    });
-
-
-    //increment count after every initalisation
-    count = count + 1;
-  };
-
-
-  //SHOW TOOLTIP
-  //-----------------------------------------------
-  methods.show = function (elementWithTooltip) {
-    var tooltip = elementWithTooltip.data('tooltipArray')[1],
-      breakpoint = elementWithTooltip.data('tooltipArray')[3].length > 0 ?
-      getBreakpoint(elementWithTooltip.data('tooltipArray')[3]) : false,
-      settings = elementWithTooltip.data('tooltipArray')[4].length > 0 ?
-      elementWithTooltip.data('tooltipArray')[4][breakpoint] : elementWithTooltip.data('tooltipArray')[2],
-      modifierClass = settings.modifierClass !== false ? settings.modifierClass : '';
-
-    //position tooltip relative to the element owning the tooltip
-    methods.position(elementWithTooltip);
-
-    //update attributes
-    tooltip.attr(a.aHi, a.f);
-
-    //add classes to tooltip
-    tooltip.addClass(`${modifierClass} ${settings.tooltipOpenClass}`);
-
-    //aminate with js if css transitions are disabled
-    if (!settings.cssTransitions) {
-      tooltip.stop().fadeIn(settings.fadeSpeed)
-    }
-
-    //close tooltip with esc button
-    $(window).on('keydown.ariaTooltip', function (event) {
-      if (event.keyCode === 27 && checkForSpecialKeys(event) === true) {
-        methods.hide(elementWithTooltip);
-      }
-    });
-  };
-
-
-  //POSITION TOOLTIP
-  //-----------------------------------------------
-  methods.position = function (elementWithTooltip) {
-    var tooltip = elementWithTooltip.data('tooltipArray')[1],
-      tooltipSize = getElementWidthAndHeight(tooltip),
-      elementWithTooltipSize = getElementWidthAndHeight(elementWithTooltip),
-      elementWithTooltipPosition = getElementPosition(elementWithTooltip),
-      screenSize = getElementWidthAndHeight($(window)),
-      breakpoint = elementWithTooltip.data('tooltipArray')[3].length > 0 ?
-      getBreakpoint(elementWithTooltip.data('tooltipArray')[3]) : false,
-      settings = elementWithTooltip.data('tooltipArray')[4].length > 0 ?
-      elementWithTooltip.data('tooltipArray')[4][breakpoint] : elementWithTooltip.data('tooltipArray')[2],
-      left = 0,
-      top = 0,
-      bottom = 'auto';
-
-    switch (settings.position) {
-      case 'screenTop':
-        break;
-      case 'top':
-        left = elementWithTooltipPosition.left + elementWithTooltipSize.width / 2 - tooltipSize.width / 2;
-        top = elementWithTooltipPosition.top - tooltipSize.height;
-        break;
-      case 'right':
-        left = elementWithTooltipPosition.left + elementWithTooltipSize.width;
-        top = elementWithTooltipPosition.top + elementWithTooltipSize.height / 2 - tooltipSize.height / 2;
-        break;
-      case 'bottom':
-        left = elementWithTooltipPosition.left + elementWithTooltipSize.width / 2 - tooltipSize.width / 2;
-        top = elementWithTooltipPosition.top + elementWithTooltipSize.height;
-        break;
-      case 'left':
-        left = elementWithTooltipPosition.left - tooltipSize.width;
-        top = elementWithTooltipPosition.top + elementWithTooltipSize.height / 2 - tooltipSize.height / 2;
-        break;
-      case 'screenBottom':
-        bottom = 0;
-        top = 'auto';
-        break;
-    }
-
-    tooltip.css({
-      left: left,
-      top: top,
-      bottom: bottom,
-      '-webkit-transform': `translate(${settings.translateX}rem, ${settings.translateY}rem)`,
-      '-moz-transform': `translate(${settings.translateX}rem, ${settings.translateY}rem)`,
-      '-ms-transform': `translate(${settings.translateX}rem, ${settings.translateY}rem)`,
-      transform: `translate(${settings.translateX}rem, ${settings.translateY}rem)`,
-      'z-index': settings.zIndex
-    });
-  };
-
-
-
-  //HIDE TOOLTIP
-  //-----------------------------------------------
-  methods.hide = function (elementWithTooltip) {
-    var tooltip = elementWithTooltip.data('tooltipArray')[1],
-      breakpoint = elementWithTooltip.data('tooltipArray')[3].length > 0 ?
-      getBreakpoint(elementWithTooltip.data('tooltipArray')[3]) : false,
-      settings = elementWithTooltip.data('tooltipArray')[4].length > 0 ?
-      elementWithTooltip.data('tooltipArray')[4][breakpoint] : elementWithTooltip.data('tooltipArray')[2],
-      i = 0,
-      l = settings.length;
-
-    //update attributes
-    tooltip.attr(a.aHi, a.t);
-
-    if (!settings.cssTransitions) {
-      tooltip.stop().fadeOut(settings.fadeSpeed, function () {
-        tooltip.removeClass(`${settings.modifierClass} ${settings.tooltipOpenClass}`);
-      });
-    } else {
-      tooltip.removeClass(`${settings.modifierClass} ${settings.tooltipOpenClass}`);
-    }
-
-    //Unbind keydown event
-    $(window).off('keydown.ariaTooltip');
-  };
-
-
-  //DESTROY TOOLTIP
-  //-----------------------------------------------
-  methods.destroy = function (elementWithTooltip) {
-
-    //hide tooltip if open
-    methods.hide(elementWithTooltip);
-
-    //remove attributes from tooltip and element with tooltip
-    elementWithTooltip.data('tooltipArray')[1].removeAttr(a.r);
-    elementWithTooltip.removeAttr(a.aDes).unbind('focus blur mouseenter mouseout');
-
-    //remove data from object
-    elementWithTooltip.removeData('tooltipArray');
-  };
-
-
-
-
-  //REMOVE TOOLTIP
-  //-----------------------------------------------
-  methods.remove = function (elementWithTooltip) {
-    //remove attributes from tooltip and element with tooltip
-    elementWithTooltip.data('tooltipArray')[1].remove();
-    elementWithTooltip.removeAttr(a.aDes).unbind('focus blur mouseenter mouseout');
-
-    //remove data from object
-    elementWithTooltip.removeData('tooltipArray');
-  };
-
-
-
-
-  //PLUGIN
-  //-----------------------------------------------
-  $.fn.ariaTooltip = function (userSettings) {
-
-    //init tooltip
-    if (typeof userSettings === 'object' || typeof userSettings === 'undefined') {
-      this.each(function () {
-        methods.init(userSettings, $(this));
-      });
-      return;
-    } else {
-      //call public methods
-      switch (userSettings) {
-        case 'show':
-          this.each(function () {
-            methods.show($(this));
-          });
-          break;
-        case 'hide':
-          this.each(function () {
-            methods.hide($(this));
-          });
-          break;
-        case 'destroy':
-          this.each(function () {
-            methods.destroy($(this));
-          });
-          break;
-        case 'remove':
-          this.each(function () {
-            methods.remove($(this));
-          });
-          break;
-      }
-    }
-  };
-
-
-  $.fn.ariaTooltip.defaultSettings = {
-    translateX: 0, //%
-    translateY: 0, //%
-    position: 'top', //top, left, right, bottom, screen-top, screen-bottom.
-    modifierClass: 'tooltip_top',
-    tooltipOpenClass: 'tooltip_open',
-    responsive: false,
-    fadeSpeed: 100,
-    cssTransitions: false,
-    zIndex: 10
-  };
-}(jQuery, window));
+  ]
+ });
+});
