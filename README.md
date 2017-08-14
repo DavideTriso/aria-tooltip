@@ -2,11 +2,9 @@
 
 jQuery plugin for **accessible** tooltips. **WAI ARIA 1.1** compliant.
 
-* Easy to customise tanks to a small but useful set of options.
+* User friendly and accessible
 * Simply target all devices with 'responsive mode'.
-* SASS/SCSS files for simple and quick UI customisations.
 * Only 4KB (minified).
-* Fully compatible with [**t** css-framework](https://github.com/DavideTriso/t-css-framework)
 * Runs in strict mode.
 
 ## Dependencies
@@ -219,6 +217,36 @@ $('.has-tooltip').ariaTooltip({
     ]
   });
 ```
+
+
+
+## Custom events
+
+The plugin triggers following events:
+
+* **ariaTooltip.initialised** after the tooltip is isinitialised
+* **ariaTooltip.updated** when the tooltips's responisve options are updated
+* **ariaTooltip.positioned** when the tooltip's position is calculated (occurs on resize)
+* **ariaTooltip.show** when th tooltip is shown
+* **ariaTooltip.hide** when the tooltip gets hidden
+
+### Example
+
+This events are triggered on window and return the tooltips's data object as arguments.
+
+```javascript
+
+//listen for ariaTooltip.initialised
+$(window).on('ariaTooltip.initialised', function(event, tooltip){
+  //When a tooltip is initialised, perform an action
+  ariaTooltip.element.addClass('aria-tooltip_initialised');
+});
+
+//Initialise the tooltip
+$('.has-tooltip').ariaTabs();
+
+```
+
 
 
 ## Using CSS transitions
