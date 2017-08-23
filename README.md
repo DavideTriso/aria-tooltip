@@ -34,7 +34,7 @@ zIndex | 10 | int | Z-index set to tooltip when visible. | optional
 ## Usage
 
 1. Include the JS script **aria-tooltip.js** - or the minified production script **aria-tooltip.min.js** - in the head or the body of your HTML file.
-2. Include the CSS file  **aria-tooltip.css** in the head of your HTML file or include the SCSS files in your project. Adapt the CSS rules to match your website's design. 
+2. Include the CSS file  **aria-tooltip.css** in the head of your HTML file or include the SCSS files in your project. 
 3. Initialise the widget within an inline script tag, or in an external JS file.
 
 

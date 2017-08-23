@@ -1,42 +1,17 @@
-//=============================
-//IMPORT
-//=============================
-@import 'breakpoints';
-@import '01_placeholders/import';
-@import '02_css-mixins/import';
-//=============================
-//VARIABLES
-//=============================
-$tooltipPadding: 0.5rem;
-$tooltipMaxWidth: 10rem;
-$tooltipColor: #fff;
-$tooltipBackgroundColor: #cb6129;
-$tooltipBorder: 0.1rem solid #ad5323;
-$tooltipBorderRadius: 0.25rem;
-$tooltipBoxShadow: 0.05rem 0.05rem 0.1rem 0.05rem rgba(127, 127, 127, 0.5);
-$tooltipArrowSize: 0.8rem;
-//=============================
-//CSS RULES
-//=============================
 //-----------------------------
 //BLOCK
 //-----------------------------
 .tooltip {
-  background-color: $tooltipBackgroundColor;
-  border: $tooltipBorder;
-  @if $tooltipBorderRadius !='' {
-    border-radius: $tooltipBorderRadius;
-  }
-  @extend %box-sizing-border-box;
-  @if $tooltipBoxShadow !='' {
-    @include box-shadow($tooltipBoxShadow);
-  }
-  color: $tooltipColor;
-  @extend %display-none;
-  @extend %margin-0;
-  max-width: $tooltipMaxWidth;
-  padding: $tooltipPadding;
-  @extend %position-fixed;
+  background-color: #404040;
+  border-radius: 0.4rem;
+  box-sizing: border-box;
+  color: #fff;
+  display: none;
+  font-size: 0.8rem;
+  margin: 0;
+  max-width: 10rem;
+  padding: 0.6rem;
+  position: fixed;
 }
 //-----------------------------
 //MODIFIERS
@@ -46,44 +21,42 @@ $tooltipArrowSize: 0.8rem;
 .tooltip_top,
 .tooltip_right {
   &:after {
-    background-color: $tooltipBackgroundColor;
-    border-bottom-right-radius: $tooltipArrowSize;
-    border-left: $tooltipBorder;
-    border-top: $tooltipBorder;
-    @extend %box-sizing-border-box;
-    @extend %content;
-    @extend %display-block;
-    height: $tooltipArrowSize;
-    @extend %position-absolute;
-    width: $tooltipArrowSize;
+    background-color: #404040;
+    border-bottom-right-radius: 1rem;
+    box-sizing: border-box;
+    content: '';
+    display: block;
+    height: 0.5rem;
+    position: absolute;
+    width: 0.5rem;
   }
 }
 .tooltip_bottom {
   &:after {
     left: 50%;
-    top: -$tooltipArrowSize / 1.75;
-    @include multiple-transform(translateX(-50%) rotate(45deg));
+    top: -0.25rem;
+    transform: translateX(-50%) rotate(45deg);
   }
 }
 .tooltip_left {
   &:after {
-    right: -$tooltipArrowSize / 1.75;
+    right: -0.25rem; 
     top: 50%;
-    @include multiple-transform(translateY(-50%) rotate(135deg));
+    transform: translateY(-50%) rotate(135deg);
   }
 }
 .tooltip_right {
   &:after {
-    left: -$tooltipArrowSize / 1.75;
+    left: -0.25rem;
     top: 50%;
-    @include multiple-transform(translateY(-50%) rotate(-45deg));
+    transform: translateY(-50%) rotate(-45deg);
   }
 }
 .tooltip_top {
   &:after {
-    bottom: -$tooltipArrowSize / 1.75;
+    bottom: -0.25rem;
     left: 50%;
-    @include multiple-transform(translateX(-50%) rotate(225deg));
+    transform: translateX(-50%) rotate(225deg);
   }
 }
 .tooltip_screen-top,
@@ -92,14 +65,10 @@ $tooltipArrowSize: 0.8rem;
   width: 100%;
 }
 .tooltip_screen-top {
-  @if $tooltipBorderRadius !='' {
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-  }
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }
 .tooltip_screen-bottom {
-  @if $tooltipBorderRadius !='' {
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-  }
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
