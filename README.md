@@ -3,9 +3,10 @@
 jQuery plugin for **accessible** tooltips. **WAI ARIA 1.1** compliant.
 
 * User friendly and accessible
-* Simply target all devices with 'responsive mode'.
+* Simply target all devices with responsive-mode.
 * Only 4KB (minified).
 * Runs in strict mode.
+* Compatible with amd and require.js
 
 ## Dependencies
 
