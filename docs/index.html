@@ -1,0 +1,59 @@
+<!doctype html>
+
+<html>
+
+<head>
+  <title>Aria-tooltip demo</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="aria-tooltip.css">
+  <style>
+    body {
+      max-width: 1000px;
+      margin: auto;
+      font-family: sans-serif;
+      text-align: center;
+    }
+    
+    .btn {
+      display: block;
+      max-width: 300px;
+      text-align: center;
+      text-decoration: none;
+      background-color: #6216c9;
+      color: #fff;
+      padding: 15px;
+      border-radius: 5px;
+      border: 1px solid #510cad;
+      margin: 100px auto;
+    }
+    
+    .btn:hover,
+    .btn:focus {
+      background-color: #510cad;
+    }
+    
+    .btn:avtive {
+      background-color: #6216c9;
+    }
+
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+  <script type="text/javascript" src="aria-tooltip.js"></script>
+</head>
+
+<body style="font-family: sans-serif; font-size: 0.9rem;">
+  <h1>Aria tooltip demo</h1>
+
+  <h2>Demo 1</h2>
+  <textarea name="example1" class="has-tooltip" aria-describedby="tt1" id="d1"></textarea>
+  <span class="tooltip" id="tt1">You can type something inside this textarea, if you want.</span>
+
+  <h2>Demo 2</h2>
+  <input name="example2" type="button" class="has-tooltip" value="button with tooltip" aria-describedby="tt2" id="d2">
+  <span class="tooltip" id="tt2">This button is really useful. You can click on it!</span>
+  <a href="https://github.com/DavideTriso/aria-tooltip" class="btn">Check documentation</a>
+
+</body>
+
+</html>

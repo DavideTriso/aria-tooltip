@@ -1,6 +1,7 @@
 # ARIA TOOLTIP
 
-jQuery plugin for **accessible** tooltips. **WAI ARIA 1.1** compliant.
+jQuery plugin for **accessible** tooltips. **WAI ARIA 1.1** compliant. [Go to demo page](https://davidetriso.github.io/aria-tooltip/).
+
 
 * User friendly and accessible
 * Simply target all devices with responsive-mode.

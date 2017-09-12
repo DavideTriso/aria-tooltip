@@ -462,7 +462,7 @@ SOFTWARE.
 
 $(document).ready(function () {
   'use strict';
-  $('.has-tooltip').ariaTooltip({
+  $('#d1').ariaTooltip({
     mouseover: true,
     responsive: [
       {
@@ -484,6 +484,25 @@ $(document).ready(function () {
         fadeSpeed: 100,
         modifierClass: 'tooltip_right',
         tooltipOffsetX: 10
+    }
+  ]
+  });
+  $('#d2').ariaTooltip({
+    mouseover: true,
+    responsive: [
+      {
+        breakpoint: 1,
+        position: 'screenTop',
+        fadeSpeed: 100,
+        tooltipOffsetY: 0,
+        modifierClass: 'tooltip_screen-top'
+    },
+      {
+        breakpoint: 992,
+        position: 'bottom',
+        fadeSpeed: 100,
+        modifierClass: 'tooltip_bottom',
+        tooltipOffsetY: 10
     }
   ]
   });
