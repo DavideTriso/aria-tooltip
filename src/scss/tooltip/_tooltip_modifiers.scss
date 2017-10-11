@@ -1,0 +1,65 @@
+//-----------------------------
+//MODIFIERS
+//-----------------------------
+
+.tooltip_bottom,
+.tooltip_left,
+.tooltip_right,
+.tooltip_top {
+  &:after {
+    background-color: #404040;
+    @include border(skip, 0 0 0.4rem 0, skip);
+    @extend %box-sizing-border-box;
+    @extend %content;
+    @extend %display-block;
+    height: 0.5rem;
+    @extend %position-absolute;
+    width: 0.5rem;
+  }
+}
+
+.tooltip_bottom {
+  &:after {
+    @extend %left-50;
+    top: -0.25rem;
+    transform: translateX(-50%) rotate(45deg);
+  }
+}
+
+.tooltip_left {
+  &:after {
+    right: -0.25rem;
+    @extend %top-50;
+    transform: translateY(-50%) rotate(135deg);
+  }
+}
+
+.tooltip_right {
+  &:after {
+    left: -0.25rem;
+    @extend %top-50;
+    transform: translateY(-50%) rotate(-45deg);
+  }
+}
+
+.tooltip_top {
+  &:after {
+    bottom: -0.25rem;
+    @extend %left-50;
+    transform: translateX(-50%) rotate(225deg);
+  }
+}
+
+.tooltip_screen-bottom,
+.tooltip_screen-top {
+  @extend %overwrite-width-100;
+  max-width: 100%;
+}
+
+.tooltip_screen-top {
+  @include border(skip, 0 0 0.4rem 0.4rem, skip);
+}
+
+.tooltip_screen-bottom {
+  @include border(skip, 0.4rem 0.4rem 0 0, skip);
+}

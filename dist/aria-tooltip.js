@@ -23,9 +23,13 @@ SOFTWARE.
 
 (function (factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['jquery'], factory);
+    define(['jquery'], factory); //AMD
+  } else if (typeof exports === 'object') {
+    module.exports = factory(require('jquery')); //CommonJS
+  } else {
+    factory(jQuery, window);
   }
-}(function ($, window, document) {
+}(function ($, window) {
   'use strict';
 
   var pluginName = 'ariaTooltip',
@@ -111,7 +115,7 @@ SOFTWARE.
       }
 
       /*
-       * Initialise the tooltip by 
+       * Initialise the tooltip by
        * setting role tooltip and aria-hidden to true
        */
       tooltip
@@ -123,7 +127,7 @@ SOFTWARE.
        * enable responsive mode if 'responsive' is not false.
        * Generate array with breakpoints and
        * array of objects with settings for each breakpoint
-       * 
+       *
        * Also watch for window resize and update settings based on current screen size
        */
       if (settings.responsive) {
@@ -215,7 +219,7 @@ SOFTWARE.
 
       if (self.currentBreakpoint !== currentBreakpoint) {
 
-        //Overwrite self.settings object with settings for current breakpoint    
+        //Overwrite self.settings object with settings for current breakpoint
         self.settings = $.extend(self.settings, self.responsiveSettings[currentBreakpoint]); //the settings
 
         //Update current breakpoint index
@@ -253,49 +257,49 @@ SOFTWARE.
         };
 
       switch (settings.position) {
-        case 'right':
-        default:
-          coordinates.left = elementCornersOffsets.right + settings.tooltipOffsetX;
-          coordinates.top = elementCornersOffsets.top + (elementSize.height / 2) - (tooltipSize.height / 2);
-          break;
-        case 'top':
-          coordinates.left = elementCornersOffsets.left + (elementSize.width / 2) - (tooltipSize.width / 2);
-          coordinates.top = elementCornersOffsets.top - tooltipSize.height - settings.tooltipOffsetY;
-          break;
-        case 'topRight':
-          coordinates.left = elementCornersOffsets.right + settings.tooltipOffsetX;
-          coordinates.top = elementCornersOffsets.top - tooltipSize.height - settings.tooltipOffsetY;
-          break;
-        case 'bottomRight':
-          coordinates.left = elementCornersOffsets.right + settings.tooltipOffsetX;
-          coordinates.top = elementCornersOffsets.bottom + settings.tooltipOffsetY;
-          break;
-        case 'bottom':
-          coordinates.left = elementCornersOffsets.left + (elementSize.width / 2) - (tooltipSize.width / 2);
-          coordinates.top = elementCornersOffsets.bottom + settings.tooltipOffsetY;
-          break;
-        case 'screenBottom':
-          coordinates.left = 0;
-          coordinates.top = 'auto';
-          coordinates.bottom = 0;
-          break;
-        case 'screenTop':
-          coordinates.left = 0;
-          coordinates.top = 0;
-          coordinates.bottom = 'auto';
-          break;
-        case 'left':
-          coordinates.left = elementCornersOffsets.left - tooltipSize.width - settings.tooltipOffsetX;
-          coordinates.top = elementCornersOffsets.top + (elementSize.height / 2) - (tooltipSize.height / 2);
-          break;
-        case 'topLeft':
-          coordinates.left = elementCornersOffsets.left - tooltipSize.width - settings.tooltipOffsetX;
-          coordinates.top = elementCornersOffsets.top - tooltipSize.height - settings.tooltipOffsetY;
-          break;
-        case 'bottomLeft':
-          coordinates.left = elementCornersOffsets.left - tooltipSize.width - settings.tooltipOffsetX;
-          coordinates.top = elementCornersOffsets.bottom + settings.tooltipOffsetY;
-          break;
+      case 'right':
+      default:
+        coordinates.left = elementCornersOffsets.right + settings.tooltipOffsetX;
+        coordinates.top = elementCornersOffsets.top + (elementSize.height / 2) - (tooltipSize.height / 2);
+        break;
+      case 'top':
+        coordinates.left = elementCornersOffsets.left + (elementSize.width / 2) - (tooltipSize.width / 2);
+        coordinates.top = elementCornersOffsets.top - tooltipSize.height - settings.tooltipOffsetY;
+        break;
+      case 'topRight':
+        coordinates.left = elementCornersOffsets.right + settings.tooltipOffsetX;
+        coordinates.top = elementCornersOffsets.top - tooltipSize.height - settings.tooltipOffsetY;
+        break;
+      case 'bottomRight':
+        coordinates.left = elementCornersOffsets.right + settings.tooltipOffsetX;
+        coordinates.top = elementCornersOffsets.bottom + settings.tooltipOffsetY;
+        break;
+      case 'bottom':
+        coordinates.left = elementCornersOffsets.left + (elementSize.width / 2) - (tooltipSize.width / 2);
+        coordinates.top = elementCornersOffsets.bottom + settings.tooltipOffsetY;
+        break;
+      case 'screenBottom':
+        coordinates.left = 0;
+        coordinates.top = 'auto';
+        coordinates.bottom = 0;
+        break;
+      case 'screenTop':
+        coordinates.left = 0;
+        coordinates.top = 0;
+        coordinates.bottom = 'auto';
+        break;
+      case 'left':
+        coordinates.left = elementCornersOffsets.left - tooltipSize.width - settings.tooltipOffsetX;
+        coordinates.top = elementCornersOffsets.top + (elementSize.height / 2) - (tooltipSize.height / 2);
+        break;
+      case 'topLeft':
+        coordinates.left = elementCornersOffsets.left - tooltipSize.width - settings.tooltipOffsetX;
+        coordinates.top = elementCornersOffsets.top - tooltipSize.height - settings.tooltipOffsetY;
+        break;
+      case 'bottomLeft':
+        coordinates.left = elementCornersOffsets.left - tooltipSize.width - settings.tooltipOffsetX;
+        coordinates.top = elementCornersOffsets.bottom + settings.tooltipOffsetY;
+        break;
       }
 
       self.tooltip.css({
@@ -409,15 +413,15 @@ SOFTWARE.
       var self = this;
 
       switch (methodName) {
-        case 'show':
-          self.show();
-          break;
-        case 'hide':
-          self.hide();
-          break;
-        case 'reposition':
-          self.positionTooltip();
-          break;
+      case 'show':
+        self.show();
+        break;
+      case 'hide':
+        self.hide();
+        break;
+      case 'reposition':
+        self.positionTooltip();
+        break;
       }
     }
   });
@@ -456,4 +460,4 @@ SOFTWARE.
     cssTransitions: false
   };
 
-}(jQuery, window, document)));
+}));

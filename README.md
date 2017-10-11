@@ -1,13 +1,13 @@
 # ARIA TOOLTIP
 
-jQuery plugin for **accessible** tooltips. **WAI ARIA 1.1** compliant. [Go to demo page](https://davidetriso.github.io/aria-tooltip/).
 
+HTML, CSS and JS tooltip UI-component for scalable projects. **User-friendly** and **accessible**: **WAI ARIA 1.1** compliant. [Go to demo page](https://davidetriso.github.io/aria-tooltip/) or [check on npm](https://www.npmjs.com/package/t-aria-tooltip).
 
-* User friendly and accessible
-* Simply target all devices with responsive-mode.
-* Only 4KB (minified).
-* Runs in strict mode.
-* Compatible with amd and require.js
+* Developed following BEM methodology
+* User-friendly and accessible
+* Only 4KB JS (minified)
+* JS plugin runs in strict mode
+* Compatible with UMD
 
 ## Dependencies
 
@@ -23,7 +23,7 @@ Developed and tested with jQuery 3.2.1
 
 Name | Default | Type | Description | Required or optional
 -----|---------|------|-------------|-------------------------
-position | top | token | Set whre the tooltip should be positioned relative to the element it blongs to. Accepted values: **top, left, right, bottom, screen-top, screen-bottom**. | optional
+position | top | token | Set where the tooltip should be positioned relative to the element it belongs to. Accepted values: **top, left, right, bottom, screen-top, screen-bottom**. | optional
 translateX | 0 | float | Offset tooltip on the X axis by a given value to adjust distance between tooltip and element (in rem units). | optional
 translateY | 0 | float | Offset tooltip on the Y axis by a given value to adjust distance between tooltip and element (in rem units). | optional
 tooltipOpenClass | tooltip_open | string | Class added to tooltip when visible. | optional
@@ -33,10 +33,21 @@ responsive | false | false or array of objects | Enable responsive mode by passi
 fadeSpeed | 100 | int (>= 0) | Duration of fade-in and fade-out animation. | optional
 zIndex | 10 | int | Z-index set to tooltip when visible. | optional
 
+
+## Installation
+
+Download the package from **GitHub** and get the compiled files from the `dist` folder.
+
+The plugin is also available on **npm**:
+```
+npm install t-aria-tooltip
+```
+
+
 ## Usage
 
 1. Include the JS script **aria-tooltip.js** - or the minified production script **aria-tooltip.min.js** - in the head or the body of your HTML file.
-2. Include the CSS file  **aria-tooltip.css** in the head of your HTML file or include the SCSS files in your project. 
+2. Include the CSS file  **aria-tooltip.css** in the head of your HTML file or include the SCSS files in your project.
 3. Initialise the widget within an inline script tag, or in an external JS file.
 
 
@@ -93,7 +104,7 @@ If you want, you can destroy a tooltip by passing **'destroy'** as a parameter t
 ```javascript
 $('.has-tooltip').ariaTooltip('destroy');
 ```
-Calling 'destroy' will remove all attributes added from the script from a tooltip, but the tooltip will remain in the DOM. If you want to completly remove the tooltip from the DOM, use instead  the **'remove'** method:
+Calling 'destroy' will remove all attributes added from the script from a tooltip, but the tooltip will remain in the DOM. If you want to completely remove the tooltip from the DOM, use instead  the **'remove'** method:
 
 ```javascript
 $('.has-tooltip').ariaTooltip('remove');
@@ -102,7 +113,7 @@ $('.has-tooltip').ariaTooltip('remove');
 
 ## Responsive mode
 
-The plugin supports an **advanced responsive mode**. This mode gives authors better control over the aspect and functionality of the tooltips on different devices. The responsive mode is enabled through the option **'responsive'**. This option **accepts an array of objects** with the options for differen screen widths (see code below). 
+The plugin supports an **advanced responsive mode**. This mode gives authors better control over the aspect and functionality of the tooltips on different devices. The responsive mode is enabled through the option **'responsive'**. This option **accepts an array of objects** with the options for different screen widths (see code below).
 
 ```javascript
 $('.has-tooltip').ariaTooltip({
@@ -176,7 +187,7 @@ $('.has-tooltip').ariaTooltip({
   });
 ```
 
-When using responsive mode, it is important to **cover all screen widths** by setting the first **'breakpoint'** to **1** or to the minimum screen width possible. Also, for the plugin to work correctly, all objects **must be sorted ascendingly by breakpoint**:
+When using responsive mode, it is important to **cover all screen widths** by setting the first **'breakpoint'** to **1** or to the minimum screen width possible. Also, for the plugin to work correctly, all the passed objects **must be sorted in ascending order by breakpoint**:
 
 ```javascript
 $('.has-tooltip').ariaTooltip({
@@ -197,7 +208,7 @@ $('.has-tooltip').ariaTooltip({
   });
 ```
 
-This code would cause an error and the plugin wont work correctly!
+This code above will cause an error and the plugin wont work correctly!
 
 The correct initialisation code is instead the following:
 
@@ -210,11 +221,11 @@ $('.has-tooltip').ariaTooltip({
       },
       {
         breakpoint: 768,  //second breakpoint
-        [...]             //options for screens >= 768px width (wich is > first breakpoint)
+        [...]             //options for screens >= 768px width (which is > first breakpoint)
       },
       {
         breakpoint: 992,  //third breakpoint
-        [...]             //options for screens >= 992px width (wich is > second breakpoint)
+        [...]             //options for screens >= 992px width (which is > second breakpoint)
       }
     ]
   });
@@ -226,10 +237,10 @@ $('.has-tooltip').ariaTooltip({
 
 The plugin triggers following events:
 
-* **ariaTooltip.initialised** after the tooltip is isinitialised
-* **ariaTooltip.updated** when the tooltips's responisve options are updated
+* **ariaTooltip.initialised** after the tooltip is initialised
+* **ariaTooltip.updated** when the tooltips's responsive options are updated
 * **ariaTooltip.positioned** when the tooltip's position is calculated (occurs on resize)
-* **ariaTooltip.show** when th tooltip is shown
+* **ariaTooltip.show** when the tooltip is shown
 * **ariaTooltip.hide** when the tooltip gets hidden
 
 ### Example

@@ -14,7 +14,7 @@
       font-family: sans-serif;
       text-align: center;
     }
-    
+
     .btn {
       display: block;
       max-width: 300px;
@@ -27,19 +27,65 @@
       border: 1px solid #510cad;
       margin: 100px auto;
     }
-    
+
     .btn:hover,
     .btn:focus {
       background-color: #510cad;
     }
-    
+
     .btn:avtive {
       background-color: #6216c9;
     }
-
   </style>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
   <script type="text/javascript" src="aria-tooltip.js"></script>
+  <script>
+    $(document).ready(function() {
+      'use strict';
+      $('#d1').ariaTooltip({
+        mouseover: true,
+        responsive: [{
+            breakpoint: 1,
+            position: 'screenTop',
+            fadeSpeed: 100,
+            tooltipOffsetY: 0,
+            modifierClass: 'tooltip_screen-top'
+          },
+          {
+            breakpoint: 768,
+            position: 'top',
+            modifierClass: 'tooltip_top',
+            tooltipOffsetX: 10
+          },
+          {
+            breakpoint: 992,
+            position: 'right',
+            fadeSpeed: 100,
+            modifierClass: 'tooltip_right',
+            tooltipOffsetX: 10
+          }
+        ]
+      });
+      $('#d2').ariaTooltip({
+        mouseover: true,
+        responsive: [{
+            breakpoint: 1,
+            position: 'screenTop',
+            fadeSpeed: 100,
+            tooltipOffsetY: 0,
+            modifierClass: 'tooltip_screen-top'
+          },
+          {
+            breakpoint: 992,
+            position: 'bottom',
+            fadeSpeed: 100,
+            modifierClass: 'tooltip_bottom',
+            tooltipOffsetY: 10
+          }
+        ]
+      });
+    });
+  </script>
 </head>
 
 <body style="font-family: sans-serif; font-size: 0.9rem;">

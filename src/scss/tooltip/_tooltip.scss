@@ -1,0 +1,16 @@
+//-----------------------------
+//BLOCK
+//-----------------------------
+
+.tooltip {
+  background-color: #404040;
+  @include border(skip, 0.4rem, skip);
+  @extend %box-sizing-border-box;
+  @extend %color-white;
+  @extend %display-none;
+  @extend %r-fs_3;
+  @extend %margin-0;
+  max-width: 10rem;
+  @extend %r-p_2;
+  @extend %position-fixed;
+}
