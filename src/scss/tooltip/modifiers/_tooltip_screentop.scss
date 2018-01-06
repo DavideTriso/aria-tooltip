@@ -1,0 +1,8 @@
+.tooltip_screentop {
+    @include border(map-merge($tooltip--border,(borderTopLeftRadius: 0, borderTopRightRadius: 0)));
+    @include sizes((width: 100%, maxWidth: 100%));
+
+    &:after {
+        content: none;
+    }
+}

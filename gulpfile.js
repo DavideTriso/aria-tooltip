@@ -6,7 +6,7 @@ var gulp = require('gulp'),
   uglify = require('gulp-uglify'),
   rename = require('gulp-rename'),
   concat = require('gulp-concat'),
-  notify = require('gulp-notify');
+  notify = require('gulp-notify'); 
 
 
 //SCSS -> CSS
@@ -93,7 +93,7 @@ gulp.task('html', ['htmlDist']);
 //WATCH TASKS
 
 gulp.task('watchScss', function () {
-  gulp.watch('src/scss/*.scss', ['scss']);
+  gulp.watch('src/scss/**/.scss', ['scss']);
 });
 
 
@@ -109,5 +109,5 @@ gulp.task('watchHTML', function () {
 gulp.task('watchAll', function () {
   gulp.watch('src/js/*.js', ['js']);
   gulp.watch('src/scss/**/*.scss', ['scss']);
-  gulp.watch('src/html/*.html', ['html']);
+  gulp.watch('src/html/*.html', ['html']); 
 });

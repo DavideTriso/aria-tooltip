@@ -1,0 +1,9 @@
+
+.tooltip_right {
+    &:after {
+        left: $tooltip--bottom;
+        top: 50%;
+        bottom: auto;
+        transform: translateY(-50%) rotate(45deg);
+    } 
+}  

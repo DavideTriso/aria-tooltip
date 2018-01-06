@@ -1,11 +1,13 @@
 # ARIA TOOLTIP
 
+## About
 
 HTML, CSS and JS tooltip UI-component for scalable projects. **User-friendly** and **accessible**: **WAI ARIA 1.1** compliant. [Go to demo page](https://davidetriso.github.io/aria-tooltip/) or [check on npm](https://www.npmjs.com/package/t-aria-tooltip).
 
 * Developed following BEM methodology
 * User-friendly and accessible
-* Only 4KB JS (minified)
+* Smart auto-position function to prevent tooltip from overflowing.
+* Only 6KB JS (minified)
 * JS plugin runs in strict mode
 * Compatible with UMD
 
@@ -23,15 +25,16 @@ Developed and tested with jQuery 3.2.1
 
 Name | Default | Type | Description | Required or optional
 -----|---------|------|-------------|-------------------------
-position | top | token | Set where the tooltip should be positioned relative to the element it belongs to. Accepted values: **top, left, right, bottom, screen-top, screen-bottom**. | optional
-translateX | 0 | float | Offset tooltip on the X axis by a given value to adjust distance between tooltip and element (in rem units). | optional
-translateY | 0 | float | Offset tooltip on the Y axis by a given value to adjust distance between tooltip and element (in rem units). | optional
+position | top | token | Set where the tooltip should be positioned relative to the element it belongs to. Accepted values: **top, left, right, bottom, topRight, topLeft, bottomRight, bottomLeft, topStart, bottomStart, topEnd, bottomEnd, screenTop, screenBottom, **. (check the section 'Positions' for more details) | optional
+translateX | 0 | float | Offset tooltip on the X axis by a given value to adjust distance between tooltip and element (in px). | optional
+translateY | 0 | float | Offset tooltip on the Y axis by a given value to adjust distance between tooltip and element (in px). | optional
 tooltipOpenClass | tooltip_open | string | Class added to tooltip when visible. | optional
 modifierClass | tooltip_top | string | Class added to tooltip when visible to modify default aspect. (Some ready-to-use modifier classes are already defined in css/scss). | optional
 cssTransitions | false | bool | Use css transitions to animate tooltip instead of JS. Check 'Using CSS transitions' for more infos. | default
 responsive | false | false or array of objects | Enable responsive mode by passing an array of object with settings for different breakpoints. For detailed infos check the section **'responsive mode'**. | optional
 fadeSpeed | 100 | int (>= 0) | Duration of fade-in and fade-out animation. | optional
 zIndex | 10 | int | Z-index set to tooltip when visible. | optional
+autoPositioning | false | Array of objects or bool false | Enable or disable auto-positioning for tooltip, when author's defined position will lead to tooltip overflow  (check the section 'Auto positioning' for more infos)| optional
 
 
 ## Installation
@@ -79,7 +82,7 @@ $('.has-tooltip').ariaTooltip({
 
 ## Methods:
 
-The plugin supports following methods: show, hide, destroy, remove.
+The plugin supports following methods: `show` and `hide`.
 
 ### Show
 
@@ -97,18 +100,64 @@ To hide a tooltip call **ariaTooltip** and pass **'hide'** as parameter:
 $('#my-element').ariaTooltip('hide');
 ```
 
-### Destroy and remove:
+## Positions
 
-If you want, you can destroy a tooltip by passing **'destroy'** as a parameter to the function:
+A tooltip can be positioned in 12 different positions relative to the element it belongs to:
 
-```javascript
-$('.has-tooltip').ariaTooltip('destroy');
+```  
+              top
+            -------
+               |
+-----    *************    -------
+left |-- *  Element  * --| right
+-----   *************    -------
+               |
+           ---------
+            bottom
+
+=======================================
+
+        | topStart
+        ---------
+        |
+         *************
+         *  Element  *
+         *************   
+        |
+        ---------
+        | bottomStart
+
+=======================================
+
+              topEnd |
+            ---------
+                     |
+         *************
+         *  Element  *
+         *************   
+                     |
+           -----------
+           bottomEnd |
+
+
+=======================================
+
+
+      topLeft |              | topRight
+      --------               -----------
+               \             /
+                *************
+                *  Element  *
+                *************  
+               /             \
+  --------------              -------------
+   bottomRight |              | bottomRight
+
+
 ```
-Calling 'destroy' will remove all attributes added from the script from a tooltip, but the tooltip will remain in the DOM. If you want to completely remove the tooltip from the DOM, use instead  the **'remove'** method:
 
-```javascript
-$('.has-tooltip').ariaTooltip('remove');
-```
+It is also possible to position the tooltip on the top (`screenTop`) and the bottom (`screenBottom`) of the viewport.
+When using `screenTop` and `screenBottom` the tooltip will span the whole width of the viewport.
 
 
 ## Responsive mode
@@ -165,7 +214,7 @@ $('.has-tooltip').ariaTooltip({
   });
 ```
 
-Although this code would perfectly work, it is strongly recommended to set the option **'position'** only once:
+Although this code would perfectly work, it is recommended to set the option **'position'** only once:
 
 ```javascript
 $('.has-tooltip').ariaTooltip({
@@ -187,7 +236,8 @@ $('.has-tooltip').ariaTooltip({
   });
 ```
 
-When using responsive mode, it is important to **cover all screen widths** by setting the first **'breakpoint'** to **1** or to the minimum screen width possible. Also, for the plugin to work correctly, all the passed objects **must be sorted in ascending order by breakpoint**:
+When using responsive mode, it is important to **cover all screen widths** by setting the first **'breakpoint'** to **1** or to the minimum screen width possible.
+Also, for the plugin to work correctly, all the passed objects **must be sorted in ascending order by breakpoint**, because the plugin does not provide a method to automatically sort the breakpoints.
 
 ```javascript
 $('.has-tooltip').ariaTooltip({
@@ -208,7 +258,7 @@ $('.has-tooltip').ariaTooltip({
   });
 ```
 
-This code above will cause an error and the plugin wont work correctly!
+The code above will cause an error and the plugin wont work correctly!
 
 The correct initialisation code is instead the following:
 
@@ -231,8 +281,6 @@ $('.has-tooltip').ariaTooltip({
   });
 ```
 
-
-
 ## Custom events
 
 The plugin triggers following events:
@@ -240,6 +288,7 @@ The plugin triggers following events:
 * **ariaTooltip.initialised** after the tooltip is initialised
 * **ariaTooltip.updated** when the tooltips's responsive options are updated
 * **ariaTooltip.positioned** when the tooltip's position is calculated (occurs on resize)
+* **ariaTooltip.autoPositioning**  when auto-positioning occurs (the event is fired before the event `ariaTooltip.positioned`)
 * **ariaTooltip.show** when the tooltip is shown
 * **ariaTooltip.hide** when the tooltip gets hidden
 
@@ -260,11 +309,40 @@ $('.has-tooltip').ariaTabs();
 
 ```
 
-
-
 ## Using CSS transitions
 
 By default the plugin is configured to use JS to show/hide the tooltips. Setting the option **cssTransitions** to 'true' will disable the JS animations and it is possible to implement show/hide animations directly in the css. In fact, the plugin toggles the class passed along with the option **tooltipOpenClass** and **modifierClasses** when a tooltip is toggled.
+
+
+## Auto positioning
+
+The plugin implements a method to check whether there is enough free space around an element for the tooltip to be placed.
+By default auto positioning is disabled (`autoPositioning: false`). To enable auto positioning pass an array of objects to the option `autoPositioning`, containing the possible alternatives positions and eventually the modifier class (see example below).
+
+```javascript
+$('.has-tooltip').ariaTooltip({
+  position: 'top', // the preferred position for the tooltip
+  autoPositioning: [
+    {
+        position: 'right',
+        tooltipModifierClass: 'tooltip_right'
+    },
+    {
+        position: 'bottom',
+        tooltipModifierClass: 'tooltip_bottom'
+    },
+    {
+        position: 'left',
+        tooltipModifierClass: 'tooltip_left'
+    },
+
+  ],    //enable auto positioning and let the script choose between one of this positions
+        //when the default position ('top') will lead to content overflow.
+  [...] // other options
+});
+```
+
+The auto positioning method will use the first position from the `autoPositioning` array which does not lead to content overflow. For this reason, it is important to order the positions from the best to the worst alternative.  
 
 
 ## LICENSE

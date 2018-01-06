@@ -1,61 +1,25 @@
-.tooltip, .tooltip_bottom:after,
-.tooltip_left:after,
-.tooltip_right:after,
-.tooltip_top:after {
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-}
+/* MIT License
 
-.tooltip {
-  color: #fff;
-}
+Copyright (c) 2017 Davide Trisolini
 
-.tooltip_bottom:after,
-.tooltip_left:after,
-.tooltip_right:after,
-.tooltip_top:after {
-  content: "";
-}
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-.tooltip_bottom:after,
-.tooltip_left:after,
-.tooltip_right:after,
-.tooltip_top:after {
-  display: block;
-}
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-.tooltip {
-  display: none;
-}
-
-.tooltip_bottom:after, .tooltip_top:after {
-  left: 50%;
-}
-
-.tooltip {
-  margin: 0;
-}
-
-.tooltip_bottom:after,
-.tooltip_left:after,
-.tooltip_right:after,
-.tooltip_top:after {
-  position: absolute;
-}
-
-.tooltip {
-  position: fixed;
-}
-
-.tooltip_left:after, .tooltip_right:after {
-  top: 50%;
-}
-
-.tooltip_screen-bottom,
-.tooltip_screen-top {
-  width: 100%;
-}
-
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
 /*
 .demo {
     background-color: red;
@@ -81,69 +45,157 @@
 }
 */
 .tooltip {
-  font-size: 0.75rem;
+  background-color: #444;
+  border-color: #141414;
+  border-radius: 0.2rem;
+  border-style: solid;
+  border-width: 0.05rem;
+  font-family: sans-serif;
+  font-size: 0.8rem;
+  color: #fff;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0.3rem;
+  max-width: 12rem;
+  min-width: 4rem;
+  position: fixed;
 }
-
-.tooltip {
-  padding: 0.4rem;
-}
-
-/*
-@include generateResponsiveGutter($guttersBreakpointsMap, $smallGuttersList, $containerClassName, $rowClassName, $columnClassName, $smallGutterModifierName);
-@include generateResponsiveGutter($guttersBreakpointsMap, $largeGuttersList, $containerClassName, $rowClassName, $columnClassName, $largeGutterModifierName);*/
-.tooltip {
-  background-color: #404040;
-  border-radius: 0.4rem;
-  max-width: 10rem;
-}
-
-.tooltip_bottom:after,
-.tooltip_left:after,
-.tooltip_right:after,
-.tooltip_top:after {
-  background-color: #404040;
-  border-radius: 0 0 0.4rem 0;
-  height: 0.5rem;
-  width: 0.5rem;
+.tooltip:after {
+  content: "";
+  display: block;
+  background-color: #444;
+  border-color: #141414;
+  border-radius: 0;
+  border-style: solid;
+  border-width: 0.05rem;
+  border-right-width: 0;
+  border-top-width: 0;
+  border-top-right-radius: 100%;
+  height: 0.4rem;
+  width: 0.4rem;
+  position: absolute;
+  bottom: -0.25rem;
+  left: 50%;
+  -ms-transform: translateX(-50%) rotate(-45deg);
+      transform: translateX(-50%) rotate(-45deg);
 }
 
 .tooltip_bottom:after {
+  left: 50%;
   top: -0.25rem;
-  -webkit-transform: translateX(-50%) rotate(45deg);
-      -ms-transform: translateX(-50%) rotate(45deg);
-          transform: translateX(-50%) rotate(45deg);
+  bottom: auto;
+  -ms-transform: translateX(-50%) rotate(135deg);
+      transform: translateX(-50%) rotate(135deg);
 }
 
-.tooltip_left:after {
-  right: -0.25rem;
-  -webkit-transform: translateY(-50%) rotate(135deg);
-      -ms-transform: translateY(-50%) rotate(135deg);
-          transform: translateY(-50%) rotate(135deg);
+.tooltip_bottomleft:after {
+  left: 0.3rem;
+  top: -0.25rem;
+  bottom: auto;
+  -ms-transform: translateX(-50%) scale(1.1) skewX(45deg) rotate(135deg);
+      transform: translateX(-50%) scale(1.1) skewX(45deg) rotate(135deg);
+}
+
+.tooltip_bottomright:after {
+  left: 0.3rem;
+  top: -0.25rem;
+  bottom: auto;
+  -ms-transform: translateX(-50%) scale(1.1) skewX(-45deg) rotate(135deg);
+      transform: translateX(-50%) scale(1.1) skewX(-45deg) rotate(135deg);
+}
+
+.tooltip_bottomstart:after {
+  left: 0.3rem;
+  top: -0.25rem;
+  bottom: auto;
+  -ms-transform: translateX(-50%) rotate(135deg);
+      transform: translateX(-50%) rotate(135deg);
+}
+
+.tooltip_bottomend:after {
+  left: auto;
+  right: 0.3rem;
+  top: -0.25rem;
+  bottom: auto;
+  -ms-transform: translateX(-50%) rotate(135deg);
+      transform: translateX(-50%) rotate(135deg);
 }
 
 .tooltip_right:after {
   left: -0.25rem;
-  -webkit-transform: translateY(-50%) rotate(-45deg);
-      -ms-transform: translateY(-50%) rotate(-45deg);
-          transform: translateY(-50%) rotate(-45deg);
+  top: 50%;
+  bottom: auto;
+  -ms-transform: translateY(-50%) rotate(45deg);
+      transform: translateY(-50%) rotate(45deg);
 }
 
-.tooltip_top:after {
+.tooltip_left:after {
+  right: -0.25rem;
+  top: 50%;
+  bottom: auto;
+  left: auto;
+  -ms-transform: translateY(-50%) rotate(-135deg);
+      transform: translateY(-50%) rotate(-135deg);
+}
+
+.tooltip_topright:after {
+  left: -0.25rem;
+  top: 50%;
+  bottom: auto;
+  -ms-transform: translateY(-50%) scale(1.1) skewX(-45deg) rotate(45deg);
+      transform: translateY(-50%) scale(1.1) skewX(-45deg) rotate(45deg);
+}
+
+.tooltip_topleft:after {
+  top: auto;
   bottom: -0.25rem;
-  -webkit-transform: translateX(-50%) rotate(225deg);
-      -ms-transform: translateX(-50%) rotate(225deg);
-          transform: translateX(-50%) rotate(225deg);
+  left: auto;
+  right: 0.3rem;
+  -ms-transform: translateX(-50%) scale(1.1) skewX(45deg) rotate(-45deg);
+      transform: translateX(-50%) scale(1.1) skewX(45deg) rotate(-45deg);
 }
 
-.tooltip_screen-bottom,
-.tooltip_screen-top {
+.tooltip_topright:after {
+  top: auto;
+  bottom: -0.25rem;
+  left: 0.3rem;
+  -ms-transform: translateX(-50%) rotate(-45deg);
+      transform: translateX(-50%) rotate(-45deg);
+}
+
+.tooltip_topend:after {
+  top: auto;
+  bottom: -0.25rem;
+  left: auto;
+  right: 0.3rem;
+  -ms-transform: translateX(-50%) rotate(-45deg);
+      transform: translateX(-50%) rotate(-45deg);
+}
+
+.tooltip_screentop {
+  border-color: #141414;
+  border-radius: 0.2rem;
+  border-style: solid;
+  border-width: 0.05rem;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
   max-width: 100%;
+  width: 100%;
+}
+.tooltip_screentop:after {
+  content: none;
 }
 
-.tooltip_screen-top {
-  border-radius: 0 0 0.4rem 0.4rem;
+.tooltip_screenbottom {
+  border-color: #141414;
+  border-radius: 0.2rem;
+  border-style: solid;
+  border-width: 0.05rem;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  max-width: 100%;
+  width: 100%;
 }
-
-.tooltip_screen-bottom {
-  border-radius: 0.4rem 0.4rem 0 0;
+.tooltip_screenbottom:after {
+  content: none;
 }

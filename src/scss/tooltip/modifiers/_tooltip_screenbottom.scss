@@ -1,0 +1,9 @@
+.tooltip_screenbottom {
+    @include border(map-merge($tooltip--border,(borderBottomLeftRadius: 0, borderBottomRightRadius: 0)));
+    @include sizes((width: 100%, maxWidth: 100%));
+
+    &:after {
+        content: none;
+    }
+}
+ 

@@ -42,45 +42,61 @@
   <script>
     $(document).ready(function() {
       'use strict';
+
+      $(window).on('ariaTooltip.autoPositioning', function(event, tooltip) {
+        console.log('auto');
+      });
+
+
       $('#d1').ariaTooltip({
         mouseover: true,
+        tooltipOffsetX: 10,
+        tooltipOffsetY: 10,
         responsive: [{
             breakpoint: 1,
-            position: 'screenTop',
+            position: 'right',
             fadeSpeed: 100,
-            tooltipOffsetY: 0,
-            modifierClass: 'tooltip_screen-top'
+            modifierClass: 'tooltip_right',
+            autoPositioning: [{
+              position: 'screenTop',
+              tooltipModifierClass: 'tooltip_screentop'
+            }]
           },
           {
             breakpoint: 768,
             position: 'top',
             modifierClass: 'tooltip_top',
-            tooltipOffsetX: 10
-          },
-          {
-            breakpoint: 992,
-            position: 'right',
-            fadeSpeed: 100,
-            modifierClass: 'tooltip_right',
-            tooltipOffsetX: 10
-          }
-        ]
-      });
-      $('#d2').ariaTooltip({
-        mouseover: true,
-        responsive: [{
-            breakpoint: 1,
-            position: 'screenTop',
-            fadeSpeed: 100,
-            tooltipOffsetY: 0,
-            modifierClass: 'tooltip_screen-top'
+            autoPositioning: [{
+              position: 'bottom',
+              tooltipModifierClass: 'tooltip_bottom'
+            }]
           },
           {
             breakpoint: 992,
             position: 'bottom',
             fadeSpeed: 100,
             modifierClass: 'tooltip_bottom',
-            tooltipOffsetY: 10
+            autoPositioning: [{
+              position: 'top',
+              tooltipModifierClass: 'tooltip_top'
+            }]
+          }
+        ]
+      });
+      $('#d2').ariaTooltip({
+        mouseover: true,
+        //autoPositioning: false,
+        responsive: [{
+            breakpoint: 1,
+            position: 'screenTop',
+            fadeSpeed: 100,
+            modifierClass: 'tooltip_screentop'
+          },
+          {
+            breakpoint: 992,
+            position: 'bottom',
+            fadeSpeed: 100,
+            modifierClass: 'tooltip_bottom',
           }
         ]
       });
