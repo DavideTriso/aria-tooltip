@@ -1,9 +1,9 @@
 .tooltip_bottomleft {
   &:after {
-    left: 0.3rem;
-    top: $tooltip--bottom;
-    bottom: auto;
-    transform: translateX(-50%) scale(1.1) skewX(45deg) rotate(135deg);
+    right    : 0.3rem;
+    left     : auto;
+    top      : $tooltip--bottom;
+    bottom   : auto;
+    transform: scale(1.1) skewX(-45deg) rotate(135deg);
   }
 }
-

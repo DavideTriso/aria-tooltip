@@ -26,15 +26,15 @@ Developed and tested with jQuery 3.2.1
 Name | Default | Type | Description | Required or optional
 -----|---------|------|-------------|-------------------------
 position | top | token | Set where the tooltip should be positioned relative to the element it belongs to. Accepted values: **top, left, right, bottom, topRight, topLeft, bottomRight, bottomLeft, topStart, bottomStart, topEnd, bottomEnd, screenTop, screenBottom, **. (check the section 'Positions' for more details) | optional
-translateX | 0 | float | Offset tooltip on the X axis by a given value to adjust distance between tooltip and element (in px). | optional
-translateY | 0 | float | Offset tooltip on the Y axis by a given value to adjust distance between tooltip and element (in px). | optional
-tooltipOpenClass | tooltip_open | string | Class added to tooltip when visible. | optional
+offsetX | 0 | float | Offset tooltip on the X axis by a given value to adjust distance between tooltip and element (in px). | optional
+offsetY | 0 | float | Offset tooltip on the Y axis by a given value to adjust distance between tooltip and element (in px). | optional
+openClass | tooltip_open | string | Class added to tooltip when visible. | optional
 modifierClass | tooltip_top | string | Class added to tooltip when visible to modify default aspect. (Some ready-to-use modifier classes are already defined in css/scss). | optional
 cssTransitions | false | bool | Use css transitions to animate tooltip instead of JS. Check 'Using CSS transitions' for more infos. | default
 responsive | false | false or array of objects | Enable responsive mode by passing an array of object with settings for different breakpoints. For detailed infos check the section **'responsive mode'**. | optional
 fadeSpeed | 100 | int (>= 0) | Duration of fade-in and fade-out animation. | optional
 zIndex | 10 | int | Z-index set to tooltip when visible. | optional
-autoPositioning | false | Array of objects or bool false | Enable or disable auto-positioning for tooltip, when author's defined position will lead to tooltip overflow  (check the section 'Auto positioning' for more infos)| optional
+autoPosition | false | Array of objects or bool false | Enable or disable auto-positioning for tooltip, when author's defined position will lead to tooltip overflow  (check the section 'Auto position' for more infos)| optional
 
 
 ## Installation
@@ -288,7 +288,7 @@ The plugin triggers following events:
 * **ariaTooltip.initialised** after the tooltip is initialised
 * **ariaTooltip.updated** when the tooltips's responsive options are updated
 * **ariaTooltip.positioned** when the tooltip's position is calculated (occurs on resize)
-* **ariaTooltip.autoPositioning**  when auto-positioning occurs (the event is fired before the event `ariaTooltip.positioned`)
+* **ariaTooltip.autoPositioned**  when auto-positioning occurs (the event is fired before the event `ariaTooltip.positioned`)
 * **ariaTooltip.show** when the tooltip is shown
 * **ariaTooltip.hide** when the tooltip gets hidden
 
@@ -317,12 +317,12 @@ By default the plugin is configured to use JS to show/hide the tooltips. Setting
 ## Auto positioning
 
 The plugin implements a method to check whether there is enough free space around an element for the tooltip to be placed.
-By default auto positioning is disabled (`autoPositioning: false`). To enable auto positioning pass an array of objects to the option `autoPositioning`, containing the possible alternatives positions and eventually the modifier class (see example below).
+By default auto positioning is disabled (`autoPosition: false`). To enable auto positioning pass an array of objects to the option `autoPosition`, containing the possible alternatives positions and eventually the modifier class (see example below).
 
 ```javascript
 $('.has-tooltip').ariaTooltip({
   position: 'top', // the preferred position for the tooltip
-  autoPositioning: [
+  autoPosition: [
     {
         position: 'right',
         tooltipModifierClass: 'tooltip_right'
@@ -342,8 +342,10 @@ $('.has-tooltip').ariaTooltip({
 });
 ```
 
-The auto positioning method will use the first position from the `autoPositioning` array which does not lead to content overflow. For this reason, it is important to order the positions from the best to the worst alternative.  
+The auto positioning method will use the first position from the `autoPosition` array which does not lead to content overflow. For this reason, it is important to order the positions from the best to the worst alternative.  
+If `tooltipModifierClass` is not set, no modifier class is added to the tooltip.
 
+**IMPORTANT:** The auto positioning method does not apply if the default position of the tooltip is set to `screenTop` or `screenBottom`. Currently it is not possible to set different `offsetX` and `offsetY` for each alternative position.
 
 ## LICENSE
 

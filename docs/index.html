@@ -43,32 +43,32 @@
     $(document).ready(function() {
       'use strict';
 
-      $(window).on('ariaTooltip.autoPositioning', function(event, tooltip) {
-        console.log('auto');
+      $(window).on('ariaTooltip.show', function(event, tooltip) {
+        console.log(tooltip);
       });
 
 
       $('#d1').ariaTooltip({
         mouseover: true,
-        tooltipOffsetX: 10,
-        tooltipOffsetY: 10,
+        offsetX: 10,
+        offsetY: 10,
         responsive: [{
             breakpoint: 1,
             position: 'right',
             fadeSpeed: 100,
             modifierClass: 'tooltip_right',
-            autoPositioning: [{
-              position: 'screenTop',
-              tooltipModifierClass: 'tooltip_screentop'
+            autoPosition: [{
+              position: 'top',
+              modifierClass: 'tooltip_top'
             }]
           },
           {
             breakpoint: 768,
             position: 'top',
             modifierClass: 'tooltip_top',
-            autoPositioning: [{
+            autoPosition: [{
               position: 'bottom',
-              tooltipModifierClass: 'tooltip_bottom'
+              modifierClass: 'tooltip_bottom'
             }]
           },
           {
@@ -76,16 +76,14 @@
             position: 'bottom',
             fadeSpeed: 100,
             modifierClass: 'tooltip_bottom',
-            autoPositioning: [{
-              position: 'top',
-              tooltipModifierClass: 'tooltip_top'
-            }]
+            autoPosition: false
           }
         ]
       });
+
       $('#d2').ariaTooltip({
         mouseover: true,
-        //autoPositioning: false,
+        //autoPosition: false,
         responsive: [{
             breakpoint: 1,
             position: 'screenTop',
@@ -100,6 +98,71 @@
           }
         ]
       });
+
+      $('#d3').ariaTooltip({
+        mouseover: true,
+        position: 'top',
+        modifierClass: 'tooltip_top',
+      });
+      $('#d4').ariaTooltip({
+        mouseover: true,
+        position: 'right',
+        modifierClass: 'tooltip_right'
+      });
+      $('#d5').ariaTooltip({
+        mouseover: true,
+        position: 'bottom',
+        modifierClass: 'tooltip_bottom'
+      });
+      $('#d6').ariaTooltip({
+        mouseover: true,
+        position: 'left',
+        modifierClass: 'tooltip_left'
+      });
+      $('#d7').ariaTooltip({
+        mouseover: true,
+        position: 'topStart',
+        modifierClass: 'tooltip_topstart'
+      });
+      $('#d8').ariaTooltip({
+        mouseover: true,
+        position: 'bottomStart',
+        modifierClass: 'tooltip_bottomstart'
+      });
+      $('#d9').ariaTooltip({
+        mouseover: true,
+        position: 'topEnd',
+        modifierClass: 'tooltip_topend'
+      });
+      $('#d10').ariaTooltip({
+        mouseover: true,
+        position: 'bottomEnd',
+        modifierClass: 'tooltip_bottomend'
+      });
+      $('#d11').ariaTooltip({
+        mouseover: true,
+        position: 'topRight',
+        modifierClass: 'tooltip_topright',
+        offsetX: -10
+      });
+      $('#d12').ariaTooltip({
+        mouseover: true,
+        position: 'bottomRight',
+        modifierClass: 'tooltip_bottomright',
+        offsetX: -10
+      });
+      $('#d13').ariaTooltip({
+        mouseover: true,
+        position: 'topLeft',
+        modifierClass: 'tooltip_topleft',
+        offsetX: -10
+      });
+      $('#d14').ariaTooltip({
+        mouseover: true,
+        position: 'bottomLeft',
+        modifierClass: 'tooltip_bottomleft',
+        offsetX: -10
+      });
     });
   </script>
 </head>
@@ -107,14 +170,54 @@
 <body style="font-family: sans-serif; font-size: 0.9rem;">
   <h1>Aria tooltip demo</h1>
 
-  <h2>Demo 1</h2>
+  <h2>Simple example</h2>
   <textarea name="example1" class="has-tooltip" aria-describedby="tt1" id="d1"></textarea>
   <span class="tooltip" id="tt1">You can type something inside this textarea, if you want.</span>
 
-  <h2>Demo 2</h2>
+
   <input name="example2" type="button" class="has-tooltip" value="button with tooltip" aria-describedby="tt2" id="d2">
   <span class="tooltip" id="tt2">This button is really useful. You can click on it!</span>
+
+  <h2>Tooltip positioning</h2>
+  <input name="example3" type="button" class="has-tooltip" value="top" aria-describedby="tt3" id="d3">
+  <span class="tooltip" id="tt3">Top</span>
+
+  <input name="example4" type="button" class="has-tooltip" value="right" aria-describedby="tt4" id="d4">
+  <span class="tooltip" id="tt4">Right</span>
+
+  <input name="example5" type="button" class="has-tooltip" value="bottom" aria-describedby="tt5" id="d5">
+  <span class="tooltip" id="tt5">Bottom</span>
+
+  <input name="example6" type="button" class="has-tooltip" value="left" aria-describedby="tt6" id="d6">
+  <span class="tooltip" id="tt6">Left</span>
+
+  <input name="example7" type="button" class="has-tooltip" value="topStart" aria-describedby="tt7" id="d7">
+  <span class="tooltip" id="tt7">topStart</span>
+
+  <input name="example8" type="button" class="has-tooltip" value="bottomStart" aria-describedby="tt8" id="d8">
+  <span class="tooltip" id="tt8">bottomStart</span>
+
+  <input name="example9" type="button" class="has-tooltip" value="topEnd" aria-describedby="tt9" id="d9">
+  <span class="tooltip" id="tt9">topEnd</span>
+
+  <input name="example10" type="button" class="has-tooltip" value="bottomEnd" aria-describedby="tt10" id="d10">
+  <span class="tooltip" id="tt10">bottomEnd</span>
+
+  <input name="example11" type="button" class="has-tooltip" value="topRight" aria-describedby="tt11" id="d11">
+  <span class="tooltip" id="tt11">topRight</span>
+
+  <input name="example12" type="button" class="has-tooltip" value="bottomRight" aria-describedby="tt12" id="d12">
+  <span class="tooltip" id="tt12">bottomRight</span>
+
+  <input name="example13" type="button" class="has-tooltip" value="topLeft" aria-describedby="tt13" id="d13">
+  <span class="tooltip" id="tt13">topLeft</span>
+
+  <input name="example14" type="button" class="has-tooltip" value="bottomLeft" aria-describedby="tt14" id="d14">
+  <span class="tooltip" id="tt14">bottomLeft</span>
+
+
   <a href="https://github.com/DavideTriso/aria-tooltip" class="btn">Check documentation</a>
+
 
 </body>
 

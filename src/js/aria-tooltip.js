@@ -70,8 +70,7 @@ SOFTWARE.
         self.tooltip = $('#' + self.element.attr(a.aDes)); // the tooltip for the element
         self.settings = $.extend({}, $.fn.ariaTooltip.defaultSettings, userSettings); //the settings
         self.tooltipStatus = false; //the status of the tooltip (false = hidden, true = visible)
-        self.autoPositioned = false; // if autopositioning occured or not
-        self.currentModifierClass = false; // placeholder for the modifier class name
+        self.currentModifierClass = ''; // placeholder for current modifier class (the modifier class currently applied to the tooltip)
 
         //initialise the tooltip
         self.init();
@@ -123,15 +122,11 @@ SOFTWARE.
                 //delete responsive array from settigns object
                 delete settings.responsive;
 
-                //set modifierClass to false
-                settings.modifierClass = false;
-
                 //populate breakpoints array and responsive settigs array
                 for (i; i < l; i = i + 1) {
                     self.breakpoints.push(responsiveSettings[i].breakpoint);
                     self.responsiveSettings.push($.extend({}, settings, responsiveSettings[i]));
                 }
-
 
                 /*
                  * Update settings object when screen size changes,
@@ -142,7 +137,6 @@ SOFTWARE.
                     self.updateSettings();
                 });
             }
-
 
             //Bind event hander to element
             //listen for focus and blur events if settings.focus is true
@@ -184,22 +178,20 @@ SOFTWARE.
                 self.hide();
             });
 
-
             //trigger custom event on window for authors to listen for
             win.trigger(pluginName + '.initialised', [self]);
         },
-        updateModifierClass: function (newModifierClass) {
-            var self = this;
+        changeModifier: function (modifierClass) {
+          var self = this;
 
-            if (self.currentModifierClass === newModifierClass) {
-                return;
-            }
-            //Upadte current modifierClass
+          if (self.currentModifierClass !== modifierClass) {
             self.tooltip
-                .removeClass(self.currentModifierClass)
-                .addClass(newModifierClass);
+              .removeClass(self.currentModifierClass)
+              .addClass(modifierClass);
 
-            self.currentModifierClass = newModifierClass;
+            //update the current modifer
+            self.currentModifierClass = modifierClass;
+          }
         },
         updateSettings: function () {
             /*
@@ -218,9 +210,6 @@ SOFTWARE.
                 self.currentBreakpoint = currentBreakpoint;
             }
 
-            //update modifier class
-            self.updateModifierClass(self.settings.modifierClass);
-
             //trigger custom event on window for authors to listen for
             win.trigger(pluginName + '.updated', [self]);
         },
@@ -238,14 +227,16 @@ SOFTWARE.
                 tooltipBoundingBox = self.tooltip[0].getBoundingClientRect(),
                 winSafeHeight = win.height() - 5,
                 winSafeWidth = win.width() - 5,
+                offsetX = settings.offsetX,
+                offsetY = setting.offsetY,
                 spacing = {
-                    top: elementBounbdingBox.top - settings.tooltipOffsetY - tooltipBoundingBox.height > 5 ? true : false,
+                    top: elementBounbdingBox.top - offsetY - tooltipBoundingBox.height > 5 ? true : false,
                     topMin: elementBounbdingBox.top + elementBounbdingBox.height / 2 - tooltipBoundingBox.height / 2 > 5 ? true : false,
-                    bottom: elementBounbdingBox.bottom + settings.tooltipOffsetY + tooltipBoundingBox.height < winSafeHeight ? true : false,
+                    bottom: elementBounbdingBox.bottom + offsetY + tooltipBoundingBox.height < winSafeHeight ? true : false,
                     bottomMin: elementBounbdingBox.bottom + elementBounbdingBox.height / 2 + tooltipBoundingBox.height / 2 > 5 ? true : false,
-                    left: elementBounbdingBox.left - settings.tooltipOffsetX - tooltipBoundingBox.width > 5 ? true : false,
+                    left: elementBounbdingBox.left - offsetX - tooltipBoundingBox.width > 5 ? true : false,
                     leftMin: elementBounbdingBox.left + elementBounbdingBox.width / 2 - tooltipBoundingBox.width / 2 > 5 ? true : false, //left margin for tooltip when centered on top or bottom
-                    right: elementBounbdingBox.right + settings.tooltipOffsetX + tooltipBoundingBox.width < winSafeWidth ? true : false,
+                    right: elementBounbdingBox.right + offsetX + tooltipBoundingBox.width < winSafeWidth ? true : false,
                     rightMin: elementBounbdingBox.left + elementBounbdingBox.width / 2 + tooltipBoundingBox.width / 2 < winSafeWidth ? true : false, //right margin for tooltip when centered on top or bottom
                     start: elementBounbdingBox.left + tooltipBoundingBox.width < winSafeWidth ? true : false,
                     end: elementBounbdingBox.right - tooltipBoundingBox.width > 5 ? true : false,
@@ -273,10 +264,14 @@ SOFTWARE.
             /*
              * Check where to position the tooltip
              * based on the elements's position and the tooltip position settings
+             * Also add the modifier class
              */
             var self = this,
               settings = self.settings,
               position = settings.position,
+              modifier = settings.modifierClass,
+              offsetX = settings.offsetX,
+              offsetY = settings.offsetY,
               elementSize = self.element[0].getBoundingClientRect(),
               elementHalfHeight = elementSize.height / 2,
               elementHalfWidth = elementSize.width / 2,
@@ -289,67 +284,88 @@ SOFTWARE.
               };
 
 
-            //autoposition tooltip, if the default position will lead to content overflow
-            if (settings.autoPositioning) {
+            //auto position tooltip, if the default position will lead to content overflow
+            if (settings.autoPosition) {
+              //retrive object of available possitions and save to var
                 var availablePositions = self.checkOverflow();
 
+                /*
+                 * Check if the default postion leads to overflow or not.
+                 * Autopositioning should be called only if the autoPosition option is not false,
+                 * and the default postion is screenTop or screenBottom - it is not necessay
+                 * to reposition tooltip when positioned on screen top or bottom
+                 */
                 //if the default position will lead to overflow
                 if (!availablePositions[position] && position !== 'screenTop' && position !== 'screenBottom') {
-                    var autoPositioningLength = settings.autoPositioning.length,
-                        autoPositioningIndex = 0;
 
-                    //get the first avilable postion from the autoPositioning array passed by user
-                    while (!availablePositions[settings.autoPositioning[autoPositioningIndex].position] && autoPositioningIndex < autoPositioningLength) {
-                        autoPositioningIndex = autoPositioningIndex + 1;
+                    var autoPositionLength = settings.autoPosition.length, // the lenght of the autoPosition array - the number of alterative positions passed from user
+                        autoPositionIndex = 0; // an index to use in the while loop
+
+                    /*
+                     * Get the first avilable postion from the autoPosition array passed by user:
+                     * loop throug the user-defined alternative positions, and check if it does not lead to overflow.
+                     * As long as no available position is found and the autoPositionIndex
+                     * is lower than the number of array entires, increment the autoPositionIndex after each loop.
+                     */
+                    while (!availablePositions[settings.autoPosition[autoPositionIndex].position] && autoPositionIndex < autoPositionLength) {
+                        autoPositionIndex = autoPositionIndex + 1;
                     }
-                    //The new position and the associated modifier class
-                    if (autoPositioningIndex < autoPositioningLength) {
-                      position = settings.autoPositioning[autoPositioningIndex].position;
-                      self.updateModifierClass(settings.autoPositioning[autoPositioningIndex].tooltipModifierClass);
-
-                      //remember the tooltip is in autopositioning mode
-                      self.autoPositioned = true;
+                    /*
+                     * If the autoPositionIndex is lower than the autoPositionLength
+                     * it means that there was a match in the while loop.
+                     * We can then use the matched position to place the tooltip.
+                     *
+                     * If the autoPositionIndex is equal to autoPositionLength
+                     * there is no available position in the user-defined array wich will not lead to content overflow.
+                     * Then we use the default position anyway.
+                     */
+                    if (autoPositionIndex < autoPositionLength) {
+                      position = settings.autoPosition[autoPositionIndex].position; // overwrite the default position
+                      modifier = settings.autoPosition[autoPositionIndex].modifierClass; // the modifier class  associated to the position
 
                       //trigger custom event on window for authors to listen for
-                      win.trigger(pluginName + '.autoPositioning', [self]);
+                      win.trigger(pluginName + '.autoPositioned', [self]);
                     }
                 }
             }
 
+            self.changeModifier(modifier);
+
+            //calculate the tooltip left and top coordinates and set the x ans y tranlatetion.
             switch (position) {
                 case 'right':
                 default:
-                    coordinates.left = elementSize.right + settings.tooltipOffsetX;
+                    coordinates.left = elementSize.right + offsetX;
                     coordinates.top = elementSize.top + elementHalfHeight;
                     coordinates.transform = 'translateY(-50%)';
                     break;
                 case 'top':
                     coordinates.left = elementSize.left + elementHalfWidth;
-                    coordinates.top = elementSize.top - settings.tooltipOffsetY;
+                    coordinates.top = elementSize.top - offsetY;
                     coordinates.transform = 'translate(-50%, -100%)';
                     break;
                 case 'topRight':
-                    coordinates.left = elementSize.right + settings.tooltipOffsetX;
-                    coordinates.top = elementSize.top - settings.tooltipOffsetY;
+                    coordinates.left = elementSize.right + offsetX;
+                    coordinates.top = elementSize.top - offsetY;
                     coordinates.transform = 'translateY(-100%)';
                     break;
                 case 'bottomRight':
-                    coordinates.left = elementSize.right + settings.tooltipOffsetX;
-                    coordinates.top = elementSize.bottom + settings.tooltipOffsetY;
+                    coordinates.left = elementSize.right + offsetX;
+                    coordinates.top = elementSize.bottom + offsetY;
                     break;
                 case 'bottom':
                     coordinates.left = elementSize.left + elementHalfWidth;
-                    coordinates.top = elementSize.bottom + settings.tooltipOffsetY;
+                    coordinates.top = elementSize.bottom + offsetY;
                     coordinates.transform = 'translateX(-50%)';
                     break;
                 case 'topStart':
                     coordinates.left = elementSize.left;
-                    coordinates.top = elementSize.top - settings.tooltipOffsetY;
+                    coordinates.top = elementSize.top - offsetY;
+                    coordinates.transform = 'translateY(-100%)';
                     break;
                 case 'bottomStart':
                     coordinates.left = elementSize.left;
-                    coordinates.top = elementSize.bottom + settings.tooltipOffsetY;
-                    coordinates.transform = 'translateY(100%)';
+                    coordinates.top = elementSize.bottom + offsetY;
                     break;
                 case 'screenBottom':
                     coordinates.left = 0;
@@ -362,32 +378,32 @@ SOFTWARE.
                     coordinates.bottom = 'auto';
                     break;
                 case 'topEnd':
-                    coordinates.left = elementSize.left;
-                    coordinates.top = elementSize.bottom + settings.tooltipOffsetY;
-                    coordinates.transform = 'translateY(100%)';
+                    coordinates.left = elementSize.right;
+                    coordinates.top = elementSize.top - offsetY;
+                    coordinates.transform = 'translate(-100%, -100%)';
                     break;
                 case 'bottomEnd':
                     coordinates.left = elementSize.right;
-                    coordinates.top = elementSize.bottom + settings.tooltipOffsetY;
-                    coordinates.transform = 'translate(-100%, 100%)';
+                    coordinates.top = elementSize.bottom + offsetY;
+                    coordinates.transform = 'translateX(-100%)';
                     break;
                 case 'left':
-                    coordinates.left = elementSize.left - settings.tooltipOffsetX;
+                    coordinates.left = elementSize.left - offsetX;
                     coordinates.top = elementSize.top + elementHalfHeight;
                     coordinates.transform = 'translate(-100%, -50%)';
                     break;
                 case 'topLeft':
-                    coordinates.left = elementSize.left - settings.tooltipOffsetX;
-                    coordinates.top = elementSize.top - settings.tooltipOffsetY;
+                    coordinates.left = elementSize.left - offsetX;
+                    coordinates.top = elementSize.top - offsetY;
                     coordinates.transform = 'translate(-100%, -100%)';
                     break;
                 case 'bottomLeft':
-                    coordinates.left = elementSize.left - settings.tooltipOffsetX;
-                    coordinates.top = elementSize.bottom + settings.tooltipOffsetY;
+                    coordinates.left = elementSize.left - offsetX;
+                    coordinates.top = elementSize.bottom + offsetY;
                     coordinates.transform = 'translateX(-100%)';
                     break;
             }
-
+            //add the css properties to the tooltip
             self.tooltip.css({
                 'left': coordinates.left,
                 'top': coordinates.top,
@@ -439,7 +455,7 @@ SOFTWARE.
              */
             tooltip
               .attr(a.aHi, a.f)
-              .addClass(settings.tooltipOpenClass);
+              .addClass(settings.openClass);
 
             /*
              * Update the tooltipStatus element
@@ -477,14 +493,6 @@ SOFTWARE.
                       'opacity': 0
                   }, settings.fadeSpeed, function () {
                       tooltip.hide();
-                      /*
-                       * restore the default modifier class
-                       * if the tooltip was positioned by autopositionig method
-                       */
-                      if (settings.autoPositioning && self.autoPositioned) {
-                        self.updateModifierClass(settings.tooltipModifierClass);
-                        self.autoPositioned = false;
-                      }
                   });
             }
 
@@ -494,7 +502,7 @@ SOFTWARE.
              */
             tooltip
               .attr(a.aHi, a.t)
-              .removeClass(settings.tooltipOpenClass);
+              .removeClass(settings.openClass);
 
             /*
              * Update the tooltipStatus element
@@ -542,11 +550,11 @@ SOFTWARE.
     //Define default settings
     $.fn[pluginName].defaultSettings = {
         position: 'top', //top, left, right, bottom, topLeft, topRight, bottomLeft, bottomRight screenTop, screenBottom.
-        autoPositioning: false,
-        tooltipOffsetX: 5, //offset in px from element (does not apply if position is screenTop or screenBottom)
-        tooltipOffsetY: 5, //offset in px from element (does not apply if position is screenTop or screenBottom)
-        tooltipModifierClass: 'tooltip_top',
-        tooltipOpenClass: 'tooltip_open',
+        autoPosition: false,
+        offsetX: 5, //offset in px from element (does not apply if position is screenTop or screenBottom)
+        offsetY: 5, //offset in px from element (does not apply if position is screenTop or screenBottom)
+        modifierClass: 'tooltip_top',
+        openClass: 'tooltip_open',
         focus: true,
         mouseover: true,
         responsive: false,

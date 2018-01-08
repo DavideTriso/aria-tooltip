@@ -1,9 +1,8 @@
-
-.tooltip_topright {
-    &:after {
-        top: auto;
-        bottom: $tooltip--bottom;
-        left: 0.3rem;
-        transform: translateX(-50%) rotate(-45deg);
-    }
+.tooltip_topstart {
+  &:after {
+    top      : auto;
+    bottom   : $tooltip--bottom;
+    left     : 0.6rem;
+    transform: rotate(-45deg);
+  }
 }

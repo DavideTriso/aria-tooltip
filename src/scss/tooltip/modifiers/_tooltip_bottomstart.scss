@@ -1,9 +1,8 @@
 .tooltip_bottomstart {
   &:after {
-    left: 0.3rem;
-    top: $tooltip--bottom;
-    bottom: auto;
-    transform: translateX(-50%) rotate(135deg);
+    left     : 0.6rem;
+    top      : $tooltip--bottom;
+    bottom   : auto;
+    transform: rotate(135deg);
   }
 }
-

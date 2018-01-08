@@ -3,25 +3,26 @@
 //-----------------------------
 
 .tooltip {
-    @include background($tooltip--background);
-    @include border($tooltip--border);
-    @include font($tootlip--font);
-    @include text($tooltip--text);
-    box-sizing: border-box;
-    margin: 0;
-    @include padding($tooltip--padding);
-    @include sizes($tooltip--sizes);
-    position: fixed;
+  @include background($tooltip--background);
+  @include border($tooltip--border);
+  @include font($tootlip--font);
+  @include text($tooltip--text);
+  box-sizing: border-box;
+  margin    : 0;
+  @include padding($tooltip--padding);
+  @include sizes($tooltip--sizes);
+  position  : fixed;
+  z-index   : zIndex(fixedNotice);
 
-    &:after {
-        content: "";
-        display: block;
-        @include background($tooltip--background);
-        @include border(map-merge($tooltip--border,(borderRadius: 0, borderTopWidth: 0, borderRightWidth: 0, borderTopRightRadius: 100%)));
-        @include sizes($tooltipPafter--sizes);
-        position: absolute;
-        bottom: $tooltip--bottom;
-        left: 50%;
-        transform: translateX(-50%) rotate(-45deg);
-    }
+  &:after {
+    content  : "";
+    display  : block;
+    @include background($tooltip--background);
+    @include border(map-merge($tooltip--border,(borderRadius: 0, borderTopWidth: 0, borderRightWidth: 0, borderTopRightRadius: 100%)));
+    @include sizes($tooltipPafter--sizes);
+    position : absolute;
+    bottom   : $tooltip--bottom;
+    left     : 50%;
+    transform: translateX(-50%) rotate(-45deg);
+  }
 }

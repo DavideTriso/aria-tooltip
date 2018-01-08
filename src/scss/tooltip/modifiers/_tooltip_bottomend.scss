@@ -1,10 +1,9 @@
 .tooltip_bottomend {
   &:after {
-    left: auto;
-    right: 0.3rem;
-    top: $tooltip--bottom;
-    bottom: auto;
-    transform: translateX(-50%) rotate(135deg);
+    left     : auto;
+    right    : 0.6rem;
+    top      : $tooltip--bottom;
+    bottom   : auto;
+    transform: rotate(135deg);
   }
 }
-

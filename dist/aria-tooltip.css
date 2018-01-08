@@ -59,6 +59,7 @@ SOFTWARE.
   max-width: 12rem;
   min-width: 4rem;
   position: fixed;
+  z-index: 300;
 }
 .tooltip:after {
   content: "";
@@ -89,36 +90,37 @@ SOFTWARE.
 }
 
 .tooltip_bottomleft:after {
-  left: 0.3rem;
+  right: 0.3rem;
+  left: auto;
   top: -0.25rem;
   bottom: auto;
-  -ms-transform: translateX(-50%) scale(1.1) skewX(45deg) rotate(135deg);
-      transform: translateX(-50%) scale(1.1) skewX(45deg) rotate(135deg);
+  -ms-transform: scale(1.1) skewX(-45deg) rotate(135deg);
+      transform: scale(1.1) skewX(-45deg) rotate(135deg);
 }
 
 .tooltip_bottomright:after {
   left: 0.3rem;
   top: -0.25rem;
   bottom: auto;
-  -ms-transform: translateX(-50%) scale(1.1) skewX(-45deg) rotate(135deg);
-      transform: translateX(-50%) scale(1.1) skewX(-45deg) rotate(135deg);
+  -ms-transform: scale(1.1) skewX(45deg) rotate(135deg);
+      transform: scale(1.1) skewX(45deg) rotate(135deg);
 }
 
 .tooltip_bottomstart:after {
-  left: 0.3rem;
+  left: 0.6rem;
   top: -0.25rem;
   bottom: auto;
-  -ms-transform: translateX(-50%) rotate(135deg);
-      transform: translateX(-50%) rotate(135deg);
+  -ms-transform: rotate(135deg);
+      transform: rotate(135deg);
 }
 
 .tooltip_bottomend:after {
   left: auto;
-  right: 0.3rem;
+  right: 0.6rem;
   top: -0.25rem;
   bottom: auto;
-  -ms-transform: translateX(-50%) rotate(135deg);
-      transform: translateX(-50%) rotate(135deg);
+  -ms-transform: rotate(135deg);
+      transform: rotate(135deg);
 }
 
 .tooltip_right:after {
@@ -139,11 +141,11 @@ SOFTWARE.
 }
 
 .tooltip_topright:after {
-  left: -0.25rem;
-  top: 50%;
-  bottom: auto;
-  -ms-transform: translateY(-50%) scale(1.1) skewX(-45deg) rotate(45deg);
-      transform: translateY(-50%) scale(1.1) skewX(-45deg) rotate(45deg);
+  left: 0.3rem;
+  top: auto;
+  bottom: -0.25rem;
+  -ms-transform: scale(1.1) skewX(-45deg) rotate(-45deg);
+      transform: scale(1.1) skewX(-45deg) rotate(-45deg);
 }
 
 .tooltip_topleft:after {
@@ -151,25 +153,25 @@ SOFTWARE.
   bottom: -0.25rem;
   left: auto;
   right: 0.3rem;
-  -ms-transform: translateX(-50%) scale(1.1) skewX(45deg) rotate(-45deg);
-      transform: translateX(-50%) scale(1.1) skewX(45deg) rotate(-45deg);
+  -ms-transform: scale(1.1) skewX(45deg) rotate(-45deg);
+      transform: scale(1.1) skewX(45deg) rotate(-45deg);
 }
 
-.tooltip_topright:after {
+.tooltip_topstart:after {
   top: auto;
   bottom: -0.25rem;
-  left: 0.3rem;
-  -ms-transform: translateX(-50%) rotate(-45deg);
-      transform: translateX(-50%) rotate(-45deg);
+  left: 0.6rem;
+  -ms-transform: rotate(-45deg);
+      transform: rotate(-45deg);
 }
 
 .tooltip_topend:after {
   top: auto;
   bottom: -0.25rem;
   left: auto;
-  right: 0.3rem;
-  -ms-transform: translateX(-50%) rotate(-45deg);
-      transform: translateX(-50%) rotate(-45deg);
+  right: 0.6rem;
+  -ms-transform: rotate(-45deg);
+      transform: rotate(-45deg);
 }
 
 .tooltip_screentop {
