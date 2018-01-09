@@ -347,6 +347,12 @@ If `tooltipModifierClass` is not set, no modifier class is added to the tooltip.
 
 **IMPORTANT:** The auto positioning method does not apply if the default position of the tooltip is set to `screenTop` or `screenBottom`. Currently it is not possible to set different `offsetX` and `offsetY` for each alternative position.
 
+
+
+## Other recommendations
+
+Do not apply any transformation to the tooltip in CSS. The `transform` property is used inline on tooltip tags by the plugin to position them correctly 
+
 ## LICENSE
 
 This project is licensed under the terms of the **MIT license**.
