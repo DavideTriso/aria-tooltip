@@ -1,12 +1,39 @@
 //BLOCK
-$tooltip--background: (backgroundColor: #444);
-$tooltip--border: (borderColor:  #141414, borderRadius: 0.2rem, borderStyle: solid, borderWidth: 0.05rem);
+$tooltip--background: (
+  backgroundColor: #444
+)
+!default;
+$tooltip--border: (
+  borderColor : #141414,
+  borderRadius: 0.2rem,
+  borderStyle : solid,
+  borderWidth : 0.05rem
+)
+!default;
 $tooltip--bottom: -0.25rem;
-$tooltip--text: (color: #fff);
-$tootlip--font: (fontSize: 0.8rem, fontFamily: sans-serif);
-$tooltip--padding: (all: 0.3rem);
-$tooltip--sizes: (maxWidth: 12rem, minWidth: 4rem); 
-$tooltipPafter--sizes: (width: 0.4rem, height: 0.4rem); 
+$tooltip--text: (
+  color: #fff
+)
+!default;
+$tootlip--font: (
+  fontSize  : 0.8rem,
+  fontFamily: sans-serif
+)
+!default;
+$tooltip--padding: (
+  all: 0.3rem
+)
+!default;
+$tooltip--sizes: (
+  maxWidth: 12rem,
+  minWidth: 4rem
+)
+!default;
+$tooltipPafter--sizes: (
+  width : 0.4rem,
+  height: 0.4rem
+)
+!default;
 
 //MODIFIERS
 //bottom
@@ -14,4 +41,3 @@ $tooltipPafter--sizes: (width: 0.4rem, height: 0.4rem);
 //right
 //screen top
 //screen bottom
- 
