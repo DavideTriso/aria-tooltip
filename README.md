@@ -7,7 +7,7 @@ HTML, CSS and JS tooltip UI-component for scalable projects. **User-friendly** a
 * Developed following BEM methodology
 * User-friendly and accessible
 * Smart auto-position function to prevent tooltip from overflowing.
-* Only 6KB JS (minified)
+* Only 7KB JS (minified)
 * JS plugin runs in strict mode
 * Compatible with UMD
 
@@ -29,12 +29,14 @@ position | top | token | Set where the tooltip should be positioned relative to 
 offsetX | 0 | float | Offset tooltip on the X axis by a given value to adjust distance between tooltip and element (in px). | optional
 offsetY | 0 | float | Offset tooltip on the Y axis by a given value to adjust distance between tooltip and element (in px). | optional
 openClass | tooltip_open | string | Class added to tooltip when visible. | optional
-modifierClass | tooltip_top | string | Class added to tooltip when visible to modify default aspect. (Some ready-to-use modifier classes are already defined in css/scss). | optional
+modifierClass | '' (empty string) | string | Class added to tooltip when visible to modify default aspect. (Some ready-to-use modifier classes are already defined in css/scss). | optional
 cssTransitions | false | bool | Use css transitions to animate tooltip instead of JS. Check 'Using CSS transitions' for more infos. | default
 responsive | false | false or array of objects | Enable responsive mode by passing an array of object with settings for different breakpoints. For detailed infos check the section **'responsive mode'**. | optional
 fadeSpeed | 100 | int (>= 0) | Duration of fade-in and fade-out animation. | optional
 zIndex | 10 | int | Z-index set to tooltip when visible. | optional
 autoPosition | false | Array of objects or bool false | Enable or disable auto-positioning for tooltip, when author's defined position will lead to tooltip overflow  (check the section 'Auto position' for more infos)| optional
+safeAreaMarginX | 5 |  int | when `autoPosition` is enabled, define a margin on the right and left side of the screen where tooltip should not be placed | optional
+safeAreaMarginY | 5 | int | when `autoPosition` is enabled, define a margin on the top and bottom side of the screen where tooltip should not be placed | optional
 
 
 ## Installation
@@ -317,7 +319,7 @@ By default the plugin is configured to use JS to show/hide the tooltips. Setting
 ## Auto positioning
 
 The plugin implements a method to check whether there is enough free space around an element for the tooltip to be placed.
-By default auto positioning is disabled (`autoPosition: false`). To enable auto positioning pass an array of objects to the option `autoPosition`, containing the possible alternatives positions and eventually the modifier class (see example below).
+By default auto positioning is disabled (`autoPosition: false`). To enable auto positioning pass an array of objects to the option `autoPosition`, containing the possible alternatives positions and eventually the modifier class (see example below). It is also possible to specify different values for `offsetX` and `offsetY` for each array entry (when `offsetX` and `offsetY` are not specified for an autoPosition setting, the standard values for `offsetX` and `offsetY` will be used instead).
 
 ```javascript
 $('.has-tooltip').ariaTooltip({
@@ -345,13 +347,12 @@ $('.has-tooltip').ariaTooltip({
 The auto positioning method will use the first position from the `autoPosition` array which does not lead to content overflow. For this reason, it is important to order the positions from the best to the worst alternative.  
 If `tooltipModifierClass` is not set, no modifier class is added to the tooltip.
 
-**IMPORTANT:** The auto positioning method does not apply if the default position of the tooltip is set to `screenTop` or `screenBottom`. Currently it is not possible to set different `offsetX` and `offsetY` for each alternative position.
-
+**IMPORTANT:** The auto positioning method does not apply if the default position of the tooltip is set to `screenTop` or `screenBottom`.
 
 
 ## Other recommendations
 
-Do not apply any transformation to the tooltip in CSS. The `transform` property is used inline on tooltip tags by the plugin to position them correctly 
+Do not apply any transformation to the tooltip in CSS. The `transform` property is used inline on tooltip tags by the plugin to position them correctly
 
 ## LICENSE
 
