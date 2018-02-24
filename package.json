@@ -1,7 +1,7 @@
 {
   "name": "t-aria-tooltip",
   "license": "MIT",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "HTML, CSS and JS tooltip UI-component for scalable projects.",
   "repository": {
     "type": "git",
@@ -19,6 +19,6 @@
     "require-dir": "^0.3.2"
   },
   "dependencies": {
-    "t-css-framework": "0.15.3"
+    "t-css-framework": "0.18.0"
   }
 }
